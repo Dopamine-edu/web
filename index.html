@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডোপামিন - অনলাইন পরীক্ষা প্ল্যাটফর্ম</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #64748b;
+            --background-color: #f8fafc;
+            --white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: var(--background-color);
+        }
+
+        /* Sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            height: 100vh;
+            background: var(--white);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--background-color);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, var(--background-color) 0%, #e0f2fe 100%);
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 1rem;
+            background: var(--white);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-card.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 5rem 1rem;
+            background: var(--background-color);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .faq-item.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .faq-question {
+            background: none;
+            border: none;
+            width: 100%;
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--background-color);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-icon.rotated {
+            transform: rotate(45deg);
+        }
+
+        /* Support Section */
+        .support {
+            padding: 3rem 1rem;
+            background: var(--white);
+            text-align: center;
+        }
+
+        .support-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .support-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .support-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .support-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .support-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: var(--white);
+            padding: 3rem 1rem 1rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #374151;
+            color: #94a3b8;
+        }
+
+        /* Featured Exam Section */
+        .featured-exam {
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+
+        .featured-exam-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .featured-exam-card {
+            position: relative;
+            display: inline-block;
+        }
+
+        .exam-snippet {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: all 0.3s ease;
+        }
+
+        .exam-snippet:hover {
+            transform: perspective(1000px) rotateY(0deg) scale(1.05);
+        }
+
+        .snippet-shine {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 8s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+
+        .snippet-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .snippet-subjects {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .snippet-subjects span {
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Exam Categories */
+        .exam-categories {
+            padding: 4rem 1rem;
+            background: var(--white);
+        }
+
+        .exam-categories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .categories-slider {
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+
+        .categories-scroll {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-behavior: smooth;
+        }
+
+        .categories-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .categories-scroll::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .categories-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            position: relative;
+            min-width: 300px;
+            flex-shrink: 0;
+        }
+
+        .category-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .category-snippet {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .dental-card .category-snippet {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .category-snippet:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .dental-card .category-snippet:hover {
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .snippet-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-snippet h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .exam-start-section {
+            text-align: center;
+        }
+
+        .exam-start-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .exam-start-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Upcoming Categories */
+        .upcoming-categories {
+            padding: 4rem 1rem;
+            background: var(--background-color);
+        }
+
+        .upcoming-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .upcoming-slider {
+            overflow: hidden;
+        }
+
+        .upcoming-scroll {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-behavior: smooth;
+        }
+
+        .upcoming-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .upcoming-scroll::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .upcoming-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .upcoming-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .upcoming-card {
+            position: relative;
+            min-width: 280px;
+            flex-shrink: 0;
+        }
+
+        .upcoming-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(100, 116, 139, 0.3);
+        }
+
+        .upcoming-snippet {
+            background: linear-gradient(135deg, #64748b, #475569);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(100, 116, 139, 0.3);
+        }
+
+        .du-card .upcoming-snippet {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+        }
+
+        .ju-card .upcoming-snippet {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .upcoming-snippet:hover {
+            transform: translateY(-5px);
+        }
+
+        .upcoming-snippet h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .coming-soon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats .section-title {
+            color: var(--white);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100vw;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid,
+            .categories-grid,
+            .upcoming-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-snippet,
+            .category-snippet,
+            .upcoming-snippet {
+                transform: none;
+            }
+
+            .exam-snippet:hover {
+                transform: scale(1.02);
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="ডোপামিন Logo" onerror="this.src='https://via.placeholder.com/40';">
+                <span>ডোপামিন</span>
+            </a>
+            <button class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 class="sidebar-title">মেনু</h3>
+            <button class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> ড্যাশবোর্ড</a></li>
+                <li><a href="courses.html"><i class="fas fa-book"></i> কোর্স</a></li>
+                <li><a href="question-bank.html"><i class="fas fa-graduation-cap"></i> প্রশ্ন ব্যাংক</a></li>
+                <li><a href="battle.html"><i class="fas fa-gamepad"></i> কুইজ ব্যাটল</a></li>
+                <li><a href="auth.html"><i class="fas fa-user"></i> লগইন</a></li>
+                <li><a href="#support"><i class="fas fa-headset"></i> সাপোর্ট</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title">স্বপ্নের ভর্তি পরীক্ষায় সফল হওয়ার সহজ উপায়</h1>
+            <p class="hero-subtitle">হাজারো প্রশ্ন, বিশেষজ্ঞদের সমাধান এবং নিয়মিত অনুশীলনের মাধ্যমে নিজেকে প্রস্তুত করুন</p>
+            <a href="#exam-start" class="cta-button" onclick="handleExamStart()">
+                <i class="fas fa-play"></i>
+                পরীক্ষা শুরু করো
+            </a>
+        </div>
+    </section>
+
+    <!-- Featured Exam Section -->
+    <section class="featured-exam">
+        <div class="featured-exam-container">
+            <div class="featured-exam-card animate-on-scroll">
+                <img src="medical-admission-2024.jpg" alt="মেডিকেল ভর্তি পরীক্ষা ২০২৪-২৫" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="width: 100%; max-width: 400px; border-radius: 20px; box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);">
+                <div class="exam-snippet medical-snippet" style="display: none;">
+                    <div class="snippet-shine"></div>
+                    <div class="snippet-content">
+                        <h3>মেডিকেল ভর্তি পরীক্ষা ২০২৪-২৫</h3>
+                        <p>১০০ প্রশ্ন • ৬০ মিনিট • নেগেটিভ ০.২৫</p>
+                        <div class="snippet-subjects">
+                            <span>জীববিজ্ঞান ৩০</span>
+                            <span>রসায়ন ২৫</span>
+                            <span>পদার্থ ২০</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exam Categories Section -->
+    <section class="exam-categories">
+        <div class="exam-categories-container">
+            <h2 class="section-title animate-on-scroll">আমাদের এক্সাম ক্যাটাগরিসমূহ (বর্তমান)</h2>
+            <div class="categories-slider animate-on-scroll">
+                <div class="categories-scroll">
+                    <div class="category-card medical-card">
+                        <img src="medical-card.jpg" alt="মেডিকেল ভর্তি" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="category-image">
+                        <div class="category-snippet">
+                            <div class="snippet-shine"></div>
+                            <div class="snippet-icon">🩺</div>
+                            <h3>মেডিকেল ভর্তি</h3>
+                            <p>৮০+ সেট • ৫,০০০+ প্রশ্ন</p>
+                        </div>
+                    </div>
+                    <div class="category-card dental-card">
+                        <img src="dental-card.jpg" alt="ডেন্টাল ভর্তি" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="category-image">
+                        <div class="category-snippet">
+                            <div class="snippet-shine"></div>
+                            <div class="snippet-icon">🦷</div>
+                            <h3>ডেন্টাল ভর্তি</h3>
+                            <p>৫০+ সেট • ৩,০০০+ প্রশ্ন</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exam-start-section animate-on-scroll">
+                <a href="#exam-start" class="exam-start-btn" onclick="handleExamStart()">
+                    <i class="fas fa-play"></i>
+                    পরীক্ষা শুরু করুন
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Categories -->
+    <section class="upcoming-categories">
+        <div class="upcoming-container">
+            <h2 class="section-title animate-on-scroll">আসছে শীঘ্রই</h2>
+            <div class="upcoming-slider animate-on-scroll">
+                <div class="upcoming-scroll">
+                    <div class="upcoming-card du-card">
+                        <img src="du-card.jpg" alt="ঢাকা বিশ্ববিদ্যালয়" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="upcoming-image">
+                        <div class="upcoming-snippet">
+                            <div class="snippet-shine"></div>
+                            <div class="snippet-icon">🏛️</div>
+                            <h3>ঢাকা বিশ্ববিদ্যালয়</h3>
+                            <p>সকল ইউনিট</p>
+                            <span class="coming-soon">শীঘ্রই</span>
+                        </div>
+                    </div>
+                    <div class="upcoming-card ju-card">
+                        <img src="ju-card.jpg" alt="জাহাঙ্গীরনগর বিশ্ববিদ্যালয়" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="upcoming-image">
+                        <div class="upcoming-snippet">
+                            <div class="snippet-shine"></div>
+                            <div class="snippet-icon">🎓</div>
+                            <h3>জাহাঙ্গীরনগর বিশ্ববিদ্যালয়</h3>
+                            <p>সকল ইউনিট</p>
+                            <span class="coming-soon">শীঘ্রই</span>
+                        </div>
+                    </div>
+                    <div class="upcoming-card ru-card">
+                        <img src="ru-card.jpg" alt="রাজশাহী বিশ্ববিদ্যালয়" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="upcoming-image">
+                        <div class="upcoming-snippet">
+                            <div class="snippet-shine"></div>
+                            <div class="snippet-icon">📚</div>
+                            <h3>রাজশাহী বিশ্ববিদ্যালয়</h3>
+                            <p>সকল ইউনিট</p>
+                            <span class="coming-soon">শীঘ্রই</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <h2 class="section-title animate-on-scroll">ডোপামিনে যা যা থাকছে</h2>
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="feature-title">৫,০০০+ প্রশ্ন</h3>
+                    <p class="feature-description">বিভিন্ন বিষয়ে হাজারো প্রশ্ন নিয়ে অনুশীলন করুন এবং নিজেকে প্রস্তুত রাখুন।</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">পারফরম্যান্স ট্র্যাকিং</h3>
+                    <p class="feature-description">আপনার অগ্রগতি ট্র্যাক করুন এবং দুর্বল বিষয়গুলো চিহ্নিত করুন।</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">কুইজ ব্যাটল</h3>
+                    <p class="feature-description">বন্ধুদের সাথে প্রতিযোগিতা করুন এবং মজার মাধ্যমে শিখুন।</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">যেকোনো ডিভাইসে</h3>
+                    <p class="feature-description">মোবাইল, ট্যাবলেট বা কম্পিউটার - যেকোনো ডিভাইসে অনুশীলন করুন।</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="feature-title">টাইমার সিস্টেম</h3>
+                    <p class="feature-description">নির্দিষ্ট সময়ে পরীক্ষা দিয়ে সময় ব্যবস্থাপনা শিখুন।</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3 class="feature-title">কাস্টম পরীক্ষা</h3>
+                    <p class="feature-description">নিজের পছন্দমতো বিষয় ও সময় নির্ধারণ করে পরীক্ষা তৈরি করুন।</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <h2 class="section-title animate-on-scroll">আমাদের পরিসংখ্যান</h2>
+            <div class="stats-grid">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number">৫,০০০+</div>
+                    <div class="stat-label">মোট প্রশ্ন</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number">১০,০০০+</div>
+                    <div class="stat-label">নিবন্ধিত শিক্ষার্থী</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number">১৫০+</div>
+                    <div class="stat-label">পরীক্ষার সেট</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number">৯৮%</div>
+                    <div class="stat-label">সন্তুষ্ট শিক্ষার্থী</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="faq-container">
+            <h2 class="section-title animate-on-scroll">প্রায়শই জিজ্ঞাসিত প্রশ্ন</h2>
+            
+            <div class="faq-item animate-on-scroll">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    ডোপামিন কী এবং এটি কীভাবে কাজ করে?
+                    <i class="fas fa-plus faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>ডোপামিন একটি অনলাইন পরীক্ষা প্ল্যাটফর্ম যেখানে আপনি মেডিকেল, ইঞ্জিনিয়ারিং এবং অন্যান্য ভর্তি পরীক্ষার জন্য প্রস্তুতি নিতে পারেন। এটি হাজারো প্রশ্ন, টাইমার সিস্টেম এবং পারফরম্যান্স ট্র্যাকিং সুবিধা প্রদান করে।</p>
+                </div>
+            </div>
+
+            <div class="faq-item animate-on-scroll">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    এটি কি বিনামূল্যে?
+                    <i class="fas fa-plus faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>হ্যাঁ, ডোপামিনের অনেক ফিচার সম্পূর্ণ বিনামূল্যে ব্যবহার করা যায়। তবে কিছু প্রিমিয়াম ফিচারের জন্য সাবস্ক্রিপশন প্রয়োজন হতে পারে।</p>
+                </div>
+            </div>
+
+            <div class="faq-item animate-on-scroll">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    কোন কোন বিষয়ের প্রশ্ন পাওয়া যায়?
+                    <i class="fas fa-plus faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান, গণিত, ইংরেজি এবং সাধারণ জ্ঞান সহ সকল গুরুত্বপূর্ণ বিষয়ের প্রশ্ন পাওয়া যায়।</p>
+                </div>
+            </div>
+
+            <div class="faq-item animate-on-scroll">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    আমি কীভাবে আমার অগ্রগতি ট্র্যাক করতে পারি?
+                    <i class="fas fa-plus faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>আপনার ড্যাশবোর্ডে বিস্তারিত পারফরম্যান্স অ্যানালিটিক্স রয়েছে যেখানে আপনি আপনার স্কোর, সঠিক/ভুল উত্তরের হার এবং বিষয়ভিত্তিক পারফরম্যান্স দেখতে পারবেন।</p>
+                </div>
+            </div>
+
+            <div class="faq-item animate-on-scroll">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    মোবাইল ফোনে ব্যবহার করা যাবে?
+                    <i class="fas fa-plus faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>অবশ্যই! ডোপামিন সম্পূর্ণভাবে মোবাইল-বান্ধব এবং যেকোনো ডিভাইসে সুন্দরভাবে কাজ করে।</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="support" id="support">
+        <div class="support-container animate-on-scroll">
+            <h2 class="support-title">এখনও প্রশ্ন আছে?</h2>
+            <p class="support-text">আমাদের সাপোর্ট টিম ২৪/৭ আপনার সেবায় নিয়োজিত। যেকোনো সমস্যায় যোগাযোগ করুন।</p>
+            <a href="#" class="support-button">
+                <i class="fas fa-headset"></i>
+                সাপোর্টে যোগাযোগ করুন
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ডোপামিন</h3>
+                    <p>বাংলাদেশের সেরা অনলাইন পরীক্ষা প্ল্যাটফর্ম। আপনার স্বপ্নের ভর্তি পরীক্ষায় সফল হওয়ার জন্য আমরা আছি আপনার পাশে।</p>
+                </div>
+                <div class="footer-section">
+                    <h3>গুরুত্বপূর্ণ লিংক</h3>
+                    <ul>
+                        <li><a href="dashboard.html">ড্যাশবোর্ড</a></li>
+                        <li><a href="courses.html">কোর্স</a></li>
+                        <li><a href="question-bank.html">প্রশ্ন ব্যাংক</a></li>
+                        <li><a href="battle.html">কুইজ ব্যাটল</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>সাপোর্ট</h3>
+                    <ul>
+                        <li><a href="#">সাহায্য কেন্দ্র</a></li>
+                        <li><a href="#">যোগাযোগ</a></li>
+                        <li><a href="#">নীতিমালা</a></li>
+                        <li><a href="#">গোপনীয়তা</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>সামাজিক মাধ্যম</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook"></i> ফেসবুক</a></li>
+                        <li><a href="#"><i class="fab fa-telegram"></i> টেলিগ্রাম</a></li>
+                        <li><a href="#"><i class="fab fa-youtube"></i> ইউটিউব</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ২০২৫ ডোপামিন। সকল অধিকার সংরক্ষিত।</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Sidebar functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        menuBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // FAQ functionality
+        function toggleFAQ(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-answer').forEach(ans => {
+                if (ans !== answer) {
+                    ans.classList.remove('active');
+                    ans.previousElementSibling.querySelector('.faq-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current FAQ
+            answer.classList.toggle('active');
+            icon.classList.toggle('rotated');
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animation classes
+        document.querySelectorAll('.animate-on-scroll, .feature-card, .faq-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Handle exam start button
+        function handleExamStart() {
+            // Check if user is logged in using Firebase auth
+            if (firebase.auth().currentUser) {
+                window.location.href = 'dashboard.html#custom-exam-section';
+            } else {
+                window.location.href = 'auth.html';
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

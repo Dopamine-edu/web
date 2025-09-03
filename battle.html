@@ -1,0 +1,1173 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কুইজ ব্যাটল - ডোপামিন</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Hind+Siliguri');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: #6b48ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .btn {
+            background: #6b48ff;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            min-width: 150px;
+        }
+
+        .btn:hover {
+            background: #5a3de6;
+            transform: translateY(-2px);
+        }
+
+        .btn.secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn.secondary:hover {
+            background: #dee2e6;
+        }
+
+        .input-group {
+            margin: 1rem 0;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6b48ff;
+        }
+
+        .room-code {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border: 2px dashed #6b48ff;
+        }
+
+        .room-code h3 {
+            color: #6b48ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-code .code {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 2px;
+        }
+
+        .players-list {
+            margin: 1rem 0;
+        }
+
+        .player {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .player.ready {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .question-container {
+            text-align: left;
+            margin: 1rem 0;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #6b48ff;
+        }
+
+        .option.selected {
+            background: #6b48ff;
+            color: white;
+            border-color: #6b48ff;
+        }
+
+        .option.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .timer {
+            background: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+        }
+
+        .player-score {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+
+        .waiting-message {
+            color: #666;
+            font-style: italic;
+            margin: 1rem 0;
+        }
+
+        .error-message {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .success-message {
+            color: #155724;
+            background: #d4edda;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .question-progress {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 1.5rem;
+                margin: 0.5rem;
+            }
+            
+            .btn {
+                min-width: 120px;
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .room-code .code {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-gamepad"></i>
+        </div>
+        <h1>কুইজ ব্যাটল</h1>
+        <p class="subtitle">বন্ধুদের সাথে প্রতিযোগিতা করুন</p>
+
+        <!-- Main Menu Screen -->
+        <div id="menuScreen" class="screen active">
+            <button class="btn" onclick="showCreateRoom()">
+                <i class="fas fa-plus"></i> রুম তৈরি করুন
+            </button>
+            <button class="btn" onclick="showJoinRoom()">
+                <i class="fas fa-sign-in-alt"></i> রুমে যোগ দিন
+            </button>
+            <button class="btn secondary" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> ফিরে যান
+            </button>
+        </div>
+
+        <!-- Create Room Screen -->
+        <div id="createRoomScreen" class="screen">
+            <h2>রুম তৈরি করুন</h2>
+            <button class="btn" onclick="createRoom()">রুম তৈরি করুন</button>
+            <button class="btn secondary" onclick="showMenu()">ফিরে যান</button>
+        </div>
+
+        <!-- Join Room Screen -->
+        <div id="joinRoomScreen" class="screen">
+            <h2>রুমে যোগ দিন</h2>
+            <div class="input-group">
+                <input type="text" id="roomCodeInput" placeholder="রুম কোড লিখুন" maxlength="6">
+            </div>
+            <button class="btn" onclick="joinRoom()">রুমে যোগ দিন</button>
+            <button class="btn secondary" onclick="showMenu()">ফিরে যান</button>
+        </div>
+
+        <!-- Waiting Room Screen -->
+        <div id="waitingRoomScreen" class="screen">
+            <h2>অপেক্ষার রুম</h2>
+            <div class="room-code">
+                <h3>রুম কোড</h3>
+                <div class="code" id="displayRoomCode"></div>
+            </div>
+            <div class="players-list" id="playersList"></div>
+            <button class="btn" id="readyBtn" onclick="toggleReady()">প্রস্তুত</button>
+            <button class="btn secondary" onclick="leaveRoom()">রুম ছেড়ে যান</button>
+            <div id="waitingMessage" class="waiting-message"></div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="screen">
+            <div class="question-progress" id="questionProgress">প্রশ্ন ১ এর ৫</div>
+            <div class="score-board" id="scoreBoard"></div>
+            <div class="timer" id="timer">১৫</div>
+            <div class="question-container">
+                <div class="question-text" id="questionText"></div>
+                <div id="optionsContainer"></div>
+            </div>
+            <div id="questionStatus"></div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <h2>ফলাফল</h2>
+            <div id="finalScores"></div>
+            <div id="winnerAnnouncement"></div>
+            <button class="btn" onclick="showMenu()">নতুন খেলা</button>
+        </div>
+
+        <div id="messageContainer"></div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXXaWWoFqn6MpH6IWSm6CGaqUJzAmzbzA",
+            authDomain: "dopamine-quiz.firebaseapp.com",
+            projectId: "dopamine-quiz",
+            storageBucket: "dopamine-quiz.appspot.com",
+            messagingSenderId: "822531459966",
+            appId: "1:822531459966:web:8e7d2385090e997eb1c12f"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let currentUser = null;
+        let currentRoom = null;
+        let currentQuestionIndex = 0;
+        let playerReady = false;
+        let timer = null;
+        let roomListener = null;
+        let hasAnswered = false;
+        let questions = [];
+
+        // Subject and chapter mapping
+        const subjects = {
+            "Botany": [
+                "Chapter 01: কোষ ও এর গঠন",
+                "Chapter 02: কোষ বিভাজন", 
+                "Chapter 03: কোষ রসায়ন",
+                "Chapter 04: অণুজীব",
+                "Chapter 05: শৈবাল ও ছত্রাক"
+            ],
+            "Zoology": [
+                "Chapter 01: প্রাণীর বিভিন্নতা ও শ্রেণিবিন্যাস",
+                "Chapter 02: প্রাণীর পরিচিতি",
+                "Chapter 03: পরিপাক ও শোষণ",
+                "Chapter 04: রক্ত সঞ্চালন",
+                "Chapter 05: শ্বাসক্রিয়া ও শ্বসন"
+            ],
+            "Physics 1st": [
+                "Chapter 01: ভৌত জগৎ ও পরিমাপ",
+                "Chapter 02: ভেক্টর",
+                "Chapter 04: নিউটোনিয়ান বলবিদ্যা",
+                "Chapter 05: কাজ, শক্তি ও ক্ষমতা",
+                "Chapter 06: মহাকর্ষ ও অভিকর্ষ"
+            ],
+            "Chemistry 1st": [
+                "Chapter 01: ল্যাবরেটরির নিরাপদ ব্যবহার",
+                "Chapter 02: গুণগত রসায়ন",
+                "Chapter 03: মৌলের পর্যায়বৃত্ত ধর্ম",
+                "Chapter 04: রাসায়নিক পরিবর্তন",
+                "Chapter 05: কর্মমুখী রসায়ন"
+            ],
+            "Chemistry 2nd": [
+                "Chapter 01: পরিবেশ রসায়ন",
+                "Chapter 02: জৈব রসায়ন",
+                "Chapter 03: পরিমাণগত রসায়ন",
+                "Chapter 04: তড়িৎ রসায়ন",
+                "Chapter 05: অর্থনৈতিক রসায়ন"
+            ]
+        };
+
+        // Firebase connection monitoring
+        let isFirebaseConnected = true;
+        
+        db.enableNetwork().catch(() => {
+            console.log('Firebase offline mode');
+            isFirebaseConnected = false;
+        });
+
+        // Monitor connection status
+        function checkFirebaseConnection() {
+            // Use a simple test query with shorter timeout
+            const testQuery = db.collection('test').limit(1).get({ source: 'server' });
+            
+            // Set a shorter timeout for connection check
+            Promise.race([
+                testQuery,
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Connection check timeout')), 5000)
+                )
+            ])
+                .then(() => {
+                    if (!isFirebaseConnected) {
+                        isFirebaseConnected = true;
+                        showMessage('🟢 Firebase সংযোগ পুনরুদ্ধার হয়েছে', 'success');
+                    }
+                })
+                .catch((error) => {
+                    if (isFirebaseConnected) {
+                        isFirebaseConnected = false;
+                        showMessage('🔴 Firebase সংযোগ দুর্বল', 'error');
+                        console.error('Firebase connection issue:', error.message);
+                    }
+                });
+        }
+        
+        // Check connection every 15 seconds (less frequent to avoid spam)
+        setInterval(checkFirebaseConnection, 15000);
+
+        // Authentication check
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                showMessage('অনুগ্রহ করে প্রথমে লগইন করুন', 'error');
+                setTimeout(() => {
+                    window.location.href = 'auth.html?redirect=' + encodeURIComponent(window.location.href);
+                }, 2000);
+                return;
+            }
+            
+            currentUser = user;
+            console.log('User authenticated:', user.uid);
+            
+            // Initial connection check
+            checkFirebaseConnection();
+        });
+
+        function sanitizeFileName(name) {
+            return name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9\u0980-\u09FF-]/g, '');
+        }
+
+        async function loadQuestionsFromJSON(subject, chapter) {
+            const sanitizedSubject = sanitizeFileName(subject);
+            const sanitizedChapter = sanitizeFileName(chapter.replace(/^Chapter \d+:\s*/, ''));
+            const filePath = `./questions/subjects/${sanitizedSubject}/${sanitizedChapter}.json`;
+            
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const data = await response.json();
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                console.error(`Error loading ${subject} - ${chapter}:`, error);
+                return [];
+            }
+        }
+
+        async function getRandomQuestions(count) {
+            try {
+                const allQuestions = [];
+                const subjectsToInclude = ['Botany', 'Zoology', 'Physics 1st', 'Chemistry 1st', 'Chemistry 2nd'];
+                
+                for (const subject of subjectsToInclude) {
+                    const chapters = subjects[subject] || [];
+                    
+                    for (const chapter of chapters) {
+                        const questions = await loadQuestionsFromJSON(subject, chapter);
+                        questions.forEach((q, index) => {
+                            allQuestions.push({
+                                ...q,
+                                id: `${subject}-${chapter}-${index}`,
+                                subject,
+                                chapter: chapter.replace(/^Chapter \d+:\s*/, '')
+                            });
+                        });
+                    }
+                }
+
+                if (allQuestions.length === 0) {
+                    console.warn('No questions loaded, using fallback');
+                    return getFallbackQuestions(count);
+                }
+
+                // Shuffle and return required count
+                const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, count);
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                return getFallbackQuestions(count);
+            }
+        }
+
+        function getFallbackQuestions(count) {
+            const fallbackQuestions = [
+                {
+                    question: "বাংলাদেশের রাজধানী কী?",
+                    options: ["ঢাকা", "চট্টগ্রাম", "সিলেট", "রাজশাহী"],
+                    correctOption: "1"
+                },
+                {
+                    question: "পানির রাসায়নিক সূত্র কী?",
+                    options: ["H₂O", "H₂O₂", "HO", "H₃O"],
+                    correctOption: "1"
+                },
+                {
+                    question: "সূর্য কোন দিকে উদয় হয়?",
+                    options: ["পূর্ব", "পশ্চিম", "উত্তর", "দক্ষিণ"],
+                    correctOption: "1"
+                },
+                {
+                    question: "৫ + ৩ = কত?",
+                    options: ["৫", "৮", "১০", "৬"],
+                    correctOption: "2"
+                },
+                {
+                    question: "পৃথিবীতে কয়টি মহাদেশ আছে?",
+                    options: ["৫টি", "৬টি", "৭টি", "৮টি"],
+                    correctOption: "3"
+                }
+            ];
+
+            const shuffled = fallbackQuestions.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showMenu() {
+            showScreen('menuScreen');
+            if (roomListener) {
+                roomListener();
+                roomListener = null;
+            }
+            currentRoom = null;
+            playerReady = false;
+            currentQuestionIndex = 0;
+            hasAnswered = false;
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        function showCreateRoom() {
+            showScreen('createRoomScreen');
+        }
+
+        function showJoinRoom() {
+            showScreen('joinRoomScreen');
+        }
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        async function createRoom() {
+            if (!currentUser) {
+                showMessage('অনুগ্রহ করে প্রথমে লগইন করুন', 'error');
+                return;
+            }
+
+            const createBtn = document.querySelector('#createRoomScreen .btn');
+            createBtn.disabled = true;
+            createBtn.textContent = 'রুম তৈরি হচ্ছে...';
+
+            try {
+                const roomCode = generateRoomCode();
+                const questionSet = await getRandomQuestions(5);
+
+                let userName = 'খেলোয়াড়';
+                try {
+                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                    if (userDoc.exists && userDoc.data().fullName) {
+                        userName = userDoc.data().fullName;
+                    } else if (currentUser.displayName) {
+                        userName = currentUser.displayName;
+                    }
+                } catch (profileError) {
+                    console.log('Could not fetch user profile, using default name');
+                }
+
+                const roomData = {
+                    code: roomCode,
+                    host: currentUser.uid,
+                    players: {
+                        [currentUser.uid]: {
+                            name: userName,
+                            ready: false,
+                            score: 0,
+                            answers: {}
+                        }
+                    },
+                    questions: questionSet,
+                    status: 'waiting',
+                    currentQuestion: 0,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                const roomRef = await db.collection('battle_rooms').add(roomData);
+                currentRoom = roomRef.id;
+                
+                showWaitingRoom(roomCode);
+                listenToRoom();
+                showMessage('রুম তৈরি হয়েছে!', 'success');
+            } catch (error) {
+                console.error('Error creating room:', error);
+                showMessage('রুম তৈরি করতে সমস্যা হয়েছে', 'error');
+            } finally {
+                createBtn.disabled = false;
+                createBtn.textContent = 'রুম তৈরি করুন';
+            }
+        }
+
+        async function joinRoom() {
+            const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+            if (!roomCode) {
+                showMessage('রুম কোড লিখুন', 'error');
+                return;
+            }
+            
+            if (!currentUser) {
+                showMessage('অনুগ্রহ করে প্রথমে লগইন করুন', 'error');
+                return;
+            }
+
+            const joinBtn = document.querySelector('#joinRoomScreen .btn');
+            joinBtn.disabled = true;
+            joinBtn.textContent = 'যোগ দিচ্ছেন...';
+
+            try {
+                const roomQuery = await db.collection('battle_rooms')
+                    .where('code', '==', roomCode)
+                    .where('status', '==', 'waiting')
+                    .limit(1)
+                    .get();
+
+                if (roomQuery.empty) {
+                    showMessage('রুম খুঁজে পাওয়া যায়নি অথবা রুমটি বন্ধ', 'error');
+                    return;
+                }
+
+                const roomDoc = roomQuery.docs[0];
+                const roomData = roomDoc.data();
+                
+                if (Object.keys(roomData.players).length >= 2) {
+                    showMessage('এই রুমটি পূর্ণ', 'error');
+                    return;
+                }
+
+                if (roomData.players[currentUser.uid]) {
+                    currentRoom = roomDoc.id;
+                    showWaitingRoom(roomCode);
+                    listenToRoom();
+                    showMessage('আপনি ইতোমধ্যে এই রুমে আছেন', 'success');
+                    return;
+                }
+
+                let userName = 'খেলোয়াড়';
+                try {
+                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                    if (userDoc.exists && userDoc.data().fullName) {
+                        userName = userDoc.data().fullName;
+                    } else if (currentUser.displayName) {
+                        userName = currentUser.displayName;
+                    }
+                } catch (profileError) {
+                    console.log('Could not fetch user profile, using default name');
+                }
+
+                currentRoom = roomDoc.id;
+                
+                await roomDoc.ref.update({
+                    [`players.${currentUser.uid}`]: {
+                        name: userName,
+                        ready: false,
+                        score: 0,
+                        answers: {}
+                    }
+                });
+
+                showWaitingRoom(roomCode);
+                listenToRoom();
+                showMessage('রুমে যোগ দিয়েছেন!', 'success');
+            } catch (error) {
+                console.error('Error joining room:', error);
+                showMessage('রুমে যোগ দিতে সমস্যা হয়েছে', 'error');
+            } finally {
+                joinBtn.disabled = false;
+                joinBtn.textContent = 'রুমে যোগ দিন';
+            }
+        }
+
+        function showWaitingRoom(roomCode) {
+            document.getElementById('displayRoomCode').textContent = roomCode;
+            showScreen('waitingRoomScreen');
+        }
+
+        function listenToRoom() {
+            if (!currentRoom) return;
+
+            roomListener = db.collection('battle_rooms').doc(currentRoom).onSnapshot(doc => {
+                if (!doc.exists) {
+                    showMessage('রুম বন্ধ হয়ে গেছে', 'error');
+                    showMenu();
+                    return;
+                }
+
+                const roomData = doc.data();
+                updatePlayersDisplay(roomData.players);
+
+                if (roomData.status === 'playing') {
+                    startQuiz(roomData);
+                } else if (roomData.status === 'finished') {
+                    showResults(roomData);
+                }
+            });
+        }
+
+        function updatePlayersDisplay(players) {
+            const playersList = document.getElementById('playersList');
+            const readyBtn = document.getElementById('readyBtn');
+            const waitingMessage = document.getElementById('waitingMessage');
+            
+            playersList.innerHTML = '';
+            
+            Object.entries(players).forEach(([playerId, player]) => {
+                const playerDiv = document.createElement('div');
+                playerDiv.className = `player ${player.ready ? 'ready' : ''}`;
+                playerDiv.innerHTML = `
+                    <span>${player.name}</span>
+                    <span>${player.ready ? '✓ প্রস্তুত' : 'অপেক্ষায়'}</span>
+                `;
+                playersList.appendChild(playerDiv);
+            });
+
+            const playersCount = Object.keys(players).length;
+            const readyCount = Object.values(players).filter(p => p.ready).length;
+
+            if (playersCount < 2) {
+                waitingMessage.textContent = 'আরও একজন খেলোয়াড়ের অপেক্ষায়...';
+                readyBtn.style.display = 'none';
+            } else {
+                waitingMessage.textContent = readyCount === 2 ? 'সবাই প্রস্তুত! খেলা শুরু হচ্ছে...' : '';
+                readyBtn.style.display = 'block';
+                
+                if (readyCount === 2) {
+                    setTimeout(() => {
+                        startGame();
+                    }, 2000);
+                }
+            }
+        }
+
+        async function toggleReady() {
+            if (!currentRoom || !currentUser) return;
+
+            try {
+                await db.collection('battle_rooms').doc(currentRoom).update({
+                    [`players.${currentUser.uid}.ready`]: !playerReady
+                });
+                playerReady = !playerReady;
+                
+                const readyBtn = document.getElementById('readyBtn');
+                readyBtn.textContent = playerReady ? 'অপেক্ষা করুন' : 'প্রস্তুত';
+                readyBtn.style.background = playerReady ? '#28a745' : '#6b48ff';
+            } catch (error) {
+                console.error('Error toggling ready:', error);
+                showMessage('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে', 'error');
+            }
+        }
+
+        async function startGame() {
+            if (!currentRoom) return;
+
+            try {
+                await db.collection('battle_rooms').doc(currentRoom).update({
+                    status: 'playing',
+                    currentQuestion: 0
+                });
+            } catch (error) {
+                console.error('Error starting game:', error);
+            }
+        }
+
+        function startQuiz(roomData) {
+            showScreen('quizScreen');
+            currentQuestionIndex = roomData.currentQuestion;
+            hasAnswered = false;
+            questions = roomData.questions;
+            updateScoreBoard(roomData.players);
+            showQuestion(roomData.questions[currentQuestionIndex], currentQuestionIndex + 1);
+        }
+
+        function updateScoreBoard(players) {
+            const scoreBoard = document.getElementById('scoreBoard');
+            scoreBoard.innerHTML = '';
+
+            Object.entries(players).forEach(([playerId, player]) => {
+                const scoreDiv = document.createElement('div');
+                scoreDiv.className = 'player-score';
+                scoreDiv.innerHTML = `
+                    <div>${player.name}</div>
+                    <div style="font-size: 1.2rem; font-weight: bold;">${player.score}</div>
+                `;
+                scoreBoard.appendChild(scoreDiv);
+            });
+        }
+
+        function showQuestion(question, questionNumber) {
+            document.getElementById('questionProgress').textContent = `প্রশ্ন ${questionNumber} এর ৫`;
+            document.getElementById('questionText').textContent = question.question;
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectOption(index, optionDiv, question);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            startTimer(15); // 15 seconds per question
+        }
+
+        function selectOption(index, element, question) {
+            if (hasAnswered || timer === null) return;
+            
+            hasAnswered = true;
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+                submitAnswer(index, question);
+            }
+        }
+
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            const timerElement = document.getElementById('timer');
+            
+            if (!timerElement) return;
+            
+            // Clear existing timer first
+            if (timer) {
+                clearInterval(timer);
+            }
+            
+            timer = setInterval(() => {
+                if (!timerElement) {
+                    clearInterval(timer);
+                    return;
+                }
+                
+                timerElement.textContent = timeLeft;
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    timer = null;
+                    if (!hasAnswered && questions[currentQuestionIndex]) {
+                        hasAnswered = true;
+                        submitAnswer(-1, questions[currentQuestionIndex]);
+                    }
+                }
+            }, 1000);
+        }
+
+        async function submitAnswer(selectedIndex, question) {
+            if (!currentRoom || !currentUser) {
+                showMessage('রুম অথবা ব্যবহারকারী পাওয়া যায়নি', 'error');
+                return;
+            }
+
+            // Show loading state
+            showMessage('উত্তর জমা দিচ্ছি...', 'success');
+
+            try {
+                // Check if offline
+                if (!navigator.onLine) {
+                    showMessage('ইন্টারনেট সংযোগ নেই। অনলাইনে আসার পর আবার চেষ্টা করুন', 'error');
+                    return;
+                }
+
+                const isCorrect = selectedIndex !== -1 && String(selectedIndex + 1) === String(question.correctOption);
+                
+                // Try with timeout wrapper
+                const submitWithTimeout = new Promise(async (resolve, reject) => {
+                    const timeoutId = setTimeout(() => {
+                        reject(new Error('Firebase timeout - সংযোগ খুব ধীর'));
+                    }, 8000); // 8 second timeout
+
+                    try {
+                        // Enable offline persistence if not already enabled
+                        if (!isFirebaseConnected) {
+                            await db.enableNetwork();
+                        }
+
+                        // Single transaction for both answer and score update
+                        const batch = db.batch();
+                        const roomRef = db.collection('battle_rooms').doc(currentRoom);
+                        
+                        // Add answer
+                        batch.update(roomRef, {
+                            [`players.${currentUser.uid}.answers.${currentQuestionIndex}`]: {
+                                selectedIndex: selectedIndex,
+                                isCorrect: isCorrect,
+                                timestamp: Date.now()
+                            }
+                        });
+
+                        // Add score if correct
+                        if (isCorrect) {
+                            batch.update(roomRef, {
+                                [`players.${currentUser.uid}.score`]: firebase.firestore.FieldValue.increment(1)
+                            });
+                        }
+
+                        await batch.commit();
+                        clearTimeout(timeoutId);
+                        resolve();
+                    } catch (err) {
+                        clearTimeout(timeoutId);
+                        reject(err);
+                    }
+                });
+
+                await submitWithTimeout;
+                
+                showQuestionResult(isCorrect, selectedIndex, question);
+                showMessage(isCorrect ? '✅ সঠিক উত্তর জমা হয়েছে!' : '❌ ভুল উত্তর জমা হয়েছে!', isCorrect ? 'success' : 'error');
+                
+                // Proceed to next question after 3 seconds
+                setTimeout(async () => {
+                    await moveToNextQuestion();
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                
+                // More specific error messages
+                if (error.message.includes('timeout') || error.code === 'unavailable') {
+                    showMessage('🔄 Firebase সংযোগ সমস্যা। পুনরায় চেষ্টা করছি...', 'error');
+                    
+                    // Retry with exponential backoff
+                    setTimeout(async () => {
+                        if (hasAnswered) return;
+                        console.log('Retrying answer submission with backoff...');
+                        
+                        // Try simpler approach - just update answer without batch
+                        try {
+                            const isCorrect = selectedIndex !== -1 && String(selectedIndex + 1) === String(question.correctOption);
+                            
+                            await db.collection('battle_rooms').doc(currentRoom).update({
+                                [`players.${currentUser.uid}.answers.${currentQuestionIndex}`]: {
+                                    selectedIndex: selectedIndex,
+                                    isCorrect: isCorrect,
+                                    timestamp: Date.now()
+                                }
+                            });
+                            
+                            if (isCorrect) {
+                                await db.collection('battle_rooms').doc(currentRoom).update({
+                                    [`players.${currentUser.uid}.score`]: firebase.firestore.FieldValue.increment(1)
+                                });
+                            }
+                            
+                            showQuestionResult(isCorrect, selectedIndex, question);
+                            showMessage('✅ উত্তর জমা হয়েছে (retry)', 'success');
+                            
+                            setTimeout(async () => {
+                                await moveToNextQuestion();
+                            }, 2000);
+                            
+                        } catch (retryError) {
+                            console.error('Retry failed:', retryError);
+                            showMessage('⚠️ উত্তর জমা দিতে ব্যর্থ। নেটওয়ার্ক চেক করুন', 'error');
+                            
+                            // Force move to next question locally
+                            setTimeout(async () => {
+                                await moveToNextQuestion();
+                            }, 3000);
+                        }
+                    }, 3000);
+                    
+                } else if (error.code === 'permission-denied') {
+                    showMessage('❌ Firebase permission denied। Admin এর সাথে যোগাযোগ করুন', 'error');
+                } else if (error.code === 'not-found') {
+                    showMessage('❌ রুম পাওয়া যায়নি', 'error');
+                    showMenu();
+                } else {
+                    showMessage('❌ উত্তর জমা দিতে সমস্যা: ' + (error.message || 'Unknown error'), 'error');
+                }
+            }
+        }
+
+        async function moveToNextQuestion() {
+            try {
+                // Get fresh room data
+                const roomDoc = await db.collection('battle_rooms').doc(currentRoom).get();
+                if (!roomDoc.exists) {
+                    showMessage('রুম আর নেই', 'error');
+                    showMenu();
+                    return;
+                }
+
+                const roomData = roomDoc.data();
+                
+                // Only host can move to next question
+                if (roomData.host === currentUser.uid) {
+                    if (currentQuestionIndex < 4) {
+                        await db.collection('battle_rooms').doc(currentRoom).update({
+                            currentQuestion: currentQuestionIndex + 1
+                        });
+                    } else {
+                        await db.collection('battle_rooms').doc(currentRoom).update({
+                            status: 'finished'
+                        });
+                    }
+                }
+            } catch (nextError) {
+                console.error('Error moving to next question:', nextError);
+                showMessage('পরবর্তী প্রশ্নে যেতে সমস্যা', 'error');
+                
+                // Force local navigation if Firebase fails
+                if (currentQuestionIndex < 4) {
+                    currentQuestionIndex++;
+                    if (questions[currentQuestionIndex]) {
+                        hasAnswered = false;
+                        showQuestion(questions[currentQuestionIndex], currentQuestionIndex + 1);
+                    }
+                } else {
+                    showMessage('কুইজ শেষ! ফলাফলের অপেক্ষায়...', 'success');
+                }
+            }
+        }
+
+        function showQuestionResult(isCorrect, selectedIndex, question) {
+            const statusElement = document.getElementById('questionStatus');
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                option.onclick = null;
+                if (String(index + 1) === String(question.correctOption)) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            statusElement.innerHTML = `
+                <div style="padding: 1rem; margin: 1rem 0; border-radius: 8px; background: ${isCorrect ? '#d4edda' : '#f8d7da'}; color: ${isCorrect ? '#155724' : '#721c24'};">
+                    ${isCorrect ? '✓ সঠিক উত্তর!' : '✗ ভুল উত্তর'}
+                </div>
+            `;
+        }
+
+        function showResults(roomData) {
+            showScreen('resultsScreen');
+            
+            const finalScores = document.getElementById('finalScores');
+            const winnerAnnouncement = document.getElementById('winnerAnnouncement');
+            
+            let html = '<h3>চূড়ান্ত স্কোর</h3>';
+            let maxScore = -1;
+            let winner = null;
+            
+            Object.entries(roomData.players).forEach(([playerId, player]) => {
+                html += `<div class="player-score">${player.name}: ${player.score}/5</div>`;
+                if (player.score > maxScore) {
+                    maxScore = player.score;
+                    winner = player.name;
+                }
+            });
+            
+            finalScores.innerHTML = html;
+            
+            const isWinner = roomData.players[currentUser.uid].score === maxScore;
+            const isDraw = Object.values(roomData.players).filter(p => p.score === maxScore).length > 1;
+            
+            let resultText = isDraw ? '🤝 ড্র!' : (isWinner ? '🎉 আপনি জিতেছেন!' : `🏆 ${winner} জিতেছে!`);
+            
+            winnerAnnouncement.innerHTML = `
+                <h2 style="color: ${isWinner ? '#28a745' : '#dc3545'};">
+                    ${resultText}
+                </h2>
+            `;
+        }
+
+        async function leaveRoom() {
+            if (!currentRoom || !currentUser) return;
+
+            try {
+                const roomDoc = await db.collection('battle_rooms').doc(currentRoom).get();
+                const roomData = roomDoc.data();
+                
+                if (roomData.host === currentUser.uid) {
+                    await db.collection('battle_rooms').doc(currentRoom).delete();
+                } else {
+                    await db.collection('battle_rooms').doc(currentRoom).update({
+                        [`players.${currentUser.uid}`]: firebase.firestore.FieldValue.delete()
+                    });
+                }
+                
+                showMenu();
+                showMessage('রুম ছেড়ে দিয়েছেন', 'success');
+            } catch (error) {
+                console.error('Error leaving room:', error);
+                showMessage('রুম ছাড়তে সমস্যা হয়েছে', 'error');
+            }
+        }
+
+        function generateRoomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

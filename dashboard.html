@@ -1,0 +1,2776 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডোপামিন - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #64748b;
+            --background-color: #f8fafc;
+            --white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --card-bg: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #2563eb);
+            --gradient-hover: linear-gradient(135deg, #2563eb, #1d4ed8);
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f59e0b;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --background-color: #0f172a;
+            --white: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --card-bg: #1e293b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Navbar - Same as index.html */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-item {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            opacity: 1;
+            color: var(--primary-color);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: var(--background-color);
+        }
+
+        /* Sidebar - Same as index.html */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100vh;
+            background: var(--white);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--background-color);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu a, .sidebar-menu button {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu button:hover {
+            background: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        /* Guest Section */
+        .guest-info {
+            text-align: center;
+            padding: 30px 22px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .guest-info h3 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .guest-info p {
+            margin: 0 0 20px 0;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .guest-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .guest-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .guest-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .guest-btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .guest-btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .guest-btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 0;
+        }
+
+        /* Greeting Section */
+        .greeting-section {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--white), rgba(59, 130, 246, 0.02));
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .greeting {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sub-greeting {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Cards Grid */
+        .cards-section {
+            padding: 2rem;
+            background: var(--background-color);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.4;
+            letter-spacing: -0.2px;
+        }
+
+        /* Custom Exam Section */
+        .custom-exam-section {
+            padding: 2rem;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .custom-exam-headline {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Exam Type Cards */
+        .exam-type-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .exam-type-card {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exam-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .exam-type-card:hover, .exam-type-card.selected {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .exam-type-card:hover::before, .exam-type-card.selected::before {
+            transform: scaleX(1);
+        }
+
+        .exam-type-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .exam-type-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .exam-type-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .exam-type-details {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Settings Section */
+        .exam-settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: var(--background-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .setting-input {
+            padding: 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .setting-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .setting-input:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Subject Selection */
+        .subject-selection {
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .subject-selection-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .subject-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .subject-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .subject-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .subject-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .subject-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .subject-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .subject-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.6rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+        }
+
+        .subject-expand {
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .subject-expand.expanded {
+            transform: rotate(180deg);
+        }
+
+        .chapters-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: var(--white);
+        }
+
+        .chapters-list.expanded {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chapter-item {
+            padding: 0.6rem 0.875rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chapter-item:last-child {
+            border-bottom: none;
+        }
+
+        .chapter-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chapter-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .chapter-name {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .chapter-count {
+            background: var(--border-color);
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Summary and Actions */
+        .exam-summary {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .summary-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 0.875rem;
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .exam-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            background: var(--gradient-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:disabled {
+            background: #a5b4fc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .loading-spinner i {
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            margin: 0 0.5rem 1rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-hover);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.5rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 834px) {
+            .nav-center {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100vw;
+            }
+
+            .greeting {
+                font-size: 2rem;
+            }
+
+            .sub-greeting {
+                font-size: 1rem;
+            }
+
+            .greeting-section {
+                padding: 2rem 1rem;
+            }
+
+            .cards-section {
+                padding: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .card {
+                padding: 1rem 0.75rem;
+                min-height: 100px;
+            }
+
+            .card-icon {
+                font-size: 1.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .card-title {
+                font-size: 0.875rem;
+            }
+
+            .custom-exam-section {
+                padding: 1rem;
+            }
+
+            .exam-type-selector {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .exam-settings {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .exam-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .greeting {
+                font-size: 1.75rem;
+            }
+
+            .custom-exam-headline {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar - Same as index.html -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="ডোপামিন Logo" onerror="this.src='https://via.placeholder.com/40';">
+                <span>ডোপামিন</span>
+            </a>
+            <div class="nav-center">
+                <a href="#" class="nav-item" onclick="scrollToCustomExam()">কাস্টম পরীক্ষা</a>
+                <a href="question-bank.html" class="nav-item" onclick="return requireLogin('question-bank.html')">প্রশ্ন ব্যাংক</a>
+                <a href="battle.html" class="nav-item">কুইজ ব্যাটল</a>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <a href="auth.html" class="guest-btn guest-btn-primary" id="login-btn" style="display: none;">লগইন</a>
+                <button class="menu-btn" onclick="toggleSidebar()" aria-label="Mobile menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar - Same as index.html -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 class="sidebar-title">মেনু</h3>
+            <button class="close-btn" onclick="closeSidebar()" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+            <!-- Guest Section (for non-logged in users) -->
+            <div class="guest-info" id="guestSection">
+                <h3>স্বাগতম!</h3>
+                <p>সব ফিচার ব্যবহার করতে লগইন করুন</p>
+                <div class="guest-actions">
+                    <a href="auth.html" class="guest-btn guest-btn-primary">লগইন</a>
+                    <a href="auth.html" class="guest-btn guest-btn-secondary">সাইন আপ</a>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="profile.html" onclick="return handleSidebarClick('profile.html')">
+                    <i class="fas fa-user"></i>
+                    প্রোফাইল
+                </a></li>
+                <li><a href="question-bank.html" onclick="return handleSidebarClick('question-bank.html')">
+                    <i class="fas fa-graduation-cap"></i>
+                    প্রশ্ন ব্যাংক
+                </a></li>
+                <li><a href="#" onclick="scrollToCustomExam(); closeSidebar();">
+                    <i class="fas fa-cogs"></i>
+                    কাস্টম পরীক্ষা
+                </a></li>
+                <li><a href="battle.html" onclick="closeSidebar();">
+                    <i class="fas fa-gamepad"></i>
+                    কুইজ ব্যাটল
+                </a></li>
+                <li><a href="#" onclick="showPerformanceModal(); closeSidebar();">
+                    <i class="fas fa-chart-line"></i>
+                    পারফরম্যান্স
+                </a></li>
+                <li><a href="#" onclick="return handleSidebarClick('#')">
+                    <i class="fas fa-question-circle"></i>
+                    সাহায্য ও সাপোর্ট
+                </a></li>
+                <li><a href="#" onclick="return handleSidebarClick('#')">
+                    <i class="fab fa-facebook"></i>
+                    ফেসবুক গ্রুপ
+                </a></li>
+                <li><a href="#" onclick="return handleSidebarClick('#')">
+                    <i class="fab fa-telegram"></i>
+                    টেলিগ্রাম গ্রুপ
+                </a></li>
+            </ul>
+
+            <div id="logoutSection" style="display: none;">
+                <ul class="sidebar-menu">
+                    <li><button onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        লগআউট
+                    </button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="greeting-section animate-on-scroll">
+            <h1 class="greeting">হ্যালো, <span id="lastName">ব্যবহারকারী</span>!</h1>
+            <p class="sub-greeting">কেমন চলছে আপনার পড়াশোনা? আজকের লক্ষ্য অর্জন করুন!</p>
+        </div>
+
+        <div class="cards-section">
+            <div class="cards-grid">
+                <div class="card animate-on-scroll" onclick="scrollToCustomExam()">
+                    <i class="fas fa-cogs card-icon"></i>
+                    <h3 class="card-title">কাস্টম পরীক্ষা</h3>
+                </div>
+                <div class="card animate-on-scroll" onclick="requireLogin('question-bank.html')">
+                    <i class="fas fa-graduation-cap card-icon"></i>
+                    <h3 class="card-title">প্রশ্ন ব্যাংক</h3>
+                </div>
+                <div class="card animate-on-scroll" onclick="window.location.href='battle.html'">
+                    <i class="fas fa-gamepad card-icon"></i>
+                    <h3 class="card-title">কুইজ ব্যাটল</h3>
+                </div>
+                <div class="card animate-on-scroll" onclick="showPerformanceModal()">
+                    <i class="fas fa-chart-line card-icon"></i>
+                    <h3 class="card-title">পারফরম্যান্স</h3>
+                </div>
+                <div class="card animate-on-scroll" onclick="window.location.href='t.me/PDF_paradise'">
+                    <i class="fas fa-file-pdf card-icon"></i>
+                    <h3 class="card-title">পিডিএফ</h3>
+                </div>
+                <div class="card animate-on-scroll" onclick="showSubjectExamModal()">
+                    <i class="fas fa-book-open card-icon"></i>
+                    <h3 class="card-title">বিষয়ভিত্তিক পরীক্ষা</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Modal -->
+        <div id="performanceModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closePerformanceModal()">×</span>
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">আপনার পারফরম্যান্স বিশ্লেষণ</h2>
+
+                <div style="margin-bottom: 1rem;">
+                    <button class="tab-btn active" onclick="openPerformanceTab('overall')">সামগ্রিক</button>
+                    <button class="tab-btn" onclick="openPerformanceTab('subject')">বিষয়ভিত্তিক</button>
+                    <button class="tab-btn" onclick="openPerformanceTab('chapter')">অধ্যায়ভিত্তিক</button>
+                    <button class="tab-btn" onclick="openPerformanceTab('timeline')">সময়রেখা</button>
+                </div>
+
+                <div id="overall" class="tab-content active">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h4 style="text-align: center; margin-bottom: 1rem;">সামগ্রিক পারফরম্যান্স</h4>
+                            <div style="height: 300px;">
+                                <canvas id="overallChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="text-align: center; margin-bottom: 1rem;">পরিসংখ্যান</h4>
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--background-color); border-radius: 8px;">
+                                    <span>পরীক্ষা দেওয়া হয়েছে:</span>
+                                    <span id="totalExams">0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--background-color); border-radius: 8px;">
+                                    <span>সর্বোচ্চ স্কোর:</span>
+                                    <span id="highestScore">0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--background-color); border-radius: 8px;">
+                                    <span>গড় স্কোর:</span>
+                                    <span id="averageScore">0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--background-color); border-radius: 8px;">
+                                    <span>সঠিক উত্তরের হার:</span>
+                                    <span id="accuracyRate">0%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--background-color); border-radius: 8px;">
+                                    <span>গড় সম্পূর্ণতা:</span>
+                                    <span id="completionRate">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="subject" class="tab-content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h4 style="text-align: center; margin-bottom: 1rem;">বিষয়ভিত্তিক পারফরম্যান্স</h4>
+                            <div style="height: 300px;">
+                                <canvas id="subjectChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem;">বিষয় নির্বাচন করুন:</label>
+                                <select id="subjectSelect" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" onchange="updateSubjectStats()">
+                                    <option value="">সব বিষয়</option>
+                                </select>
+                            </div>
+                            <div id="subjectStats">
+                                <!-- Will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chapter" class="tab-content">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">বিষয় নির্বাচন করুন:</label>
+                        <select id="chapterSubjectSelect" style="width: 30%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" onchange="updateChapterList()">
+                            <option value="">সব বিষয়</option>
+                        </select>
+                    </div>
+                    <div id="chapterStats">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                    <div style="height: 300px; margin-top: 1rem;">
+                        <canvas id="chapterChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="timeline" class="tab-content">
+                    <div style="height: 300px;">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                    <div id="timelineStats" style="margin-top: 1rem;">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Exam Section -->
+        <div class="custom-exam-section animate-on-scroll" id="custom-exam-section">
+            <h2 class="custom-exam-headline">কাস্টম পরীক্ষা তৈরি করুন</h2>
+
+            <!-- Exam Type Selection -->
+            <div class="exam-type-selector">
+                <div class="exam-type-card" data-type="custom">
+                    <div class="exam-type-icon">🎯</div>
+                    <div class="exam-type-title">কাস্টম পরীক্ষা</div>
+                    <div class="exam-type-subtitle">নিজের মতো করে তৈরি করুন</div>
+                    <div class="exam-type-details">
+                        আপনার পছন্দমতো বিষয়, সময় এবং প্রশ্ন সংখ্যা নির্বাচন করুন
+                    </div>
+                </div>
+
+                <div class="exam-type-card" data-type="medical">
+                    <div class="exam-type-icon">🩺</div>
+                    <div class="exam-type-title">মেডিকেল ভর্তি</div>
+                    <div class="exam-type-subtitle">প্রিসেট প্যাটার্ন</div>
+                    <div class="exam-type-details">
+                        ১০০ প্রশ্ন • ৬০ মিনিট • নেগেটিভ ০.২৫<br>
+                        জীববিজ্ঞান ৩০ • রসায়ন ২৫ • পদার্থ ২০ • ইংরেজি ১৫ • সাধারণ জ্ঞান ১০
+                    </div>
+                </div>
+
+                <div class="exam-type-card" data-type="dental">
+                    <div class="exam-type-icon">🦷</div>
+                    <div class="exam-type-title">ডেন্টাল ভর্তি</div>
+                    <div class="exam-type-subtitle">প্রিসেট প্যাটার্ন</div>
+                    <div class="exam-type-details">
+                        ১০০ প্রশ্ন • ৬০ মিনিট • নেগেটিভ ০.২৫<br>
+                        জীববিজ্ঞান ৩০ • রসায়ন ২৫ • পদার্থ ২০ • ইংরেজি ১৫ • সাধারণ জ্ঞান ১০
+                    </div>
+                </div>
+            </div>
+
+            <form id="customExamForm">
+                <!-- Exam Settings -->
+                <div class="exam-settings">
+                    <div class="setting-group">
+                        <label class="setting-label">মোট প্রশ্ন সংখ্যা</label>
+                        <input type="number" id="numQuestions" class="setting-input" min="1" max="200" value="20" required>
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label">সময় (মিনিট)</label>
+                        <select id="timeSelect" class="setting-input">
+                            <option value="10">১০ মিনিট</option>
+                            <option value="20">২০ মিনিট</option>
+                            <option value="30">৩০ মিনিট</option>
+                            <option value="60">৬০ মিনিট</option>
+                            <option value="custom">কাস্টম সময়</option>
+                        </select>
+                        <input type="number" id="customTime" class="setting-input" min="1" placeholder="কাস্টম মিনিট" style="display: none; margin-top: 0.5rem;">
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label">প্রতি প্রশ্নের নম্বর</label>
+                        <input type="number" id="marksPerQuestion" class="setting-input" min="0.1" step="0.1" value="1" required>
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label">নেগেটিভ মার্কিং</label>
+                        <input type="number" id="negativeMarking" class="setting-input" min="0" step="0.01" value="0" placeholder="০">
+                    </div>
+                </div>
+
+                <!-- Subject Selection (only for custom) -->
+                <div class="subject-selection" id="subjectSelectionSection">
+                    <div class="subject-selection-title">বিষয় ও অধ্যায় নির্বাচন করুন</div>
+                    <div class="subjects-grid" id="subjectSelection">
+                        <!-- Subjects will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="exam-summary">
+                    <div class="summary-title">পরীক্ষার সামারি</div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-value" id="summaryQuestions">০</div>
+                            <div class="summary-label">মোট প্রশ্ন</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="summaryTime">০ মিনিট</div>
+                            <div class="summary-label">সময়</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="summaryMarks">০</div>
+                            <div class="summary-label">প্রতি প্রশ্নের নম্বর</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="summaryNegative">০</div>
+                            <div class="summary-label">নেগেটিভ মার্কিং</div>
+                        </div>
+                    </div>
+
+                    <div class="exam-actions">
+                        <button type="submit" class="btn-primary">পরীক্ষা শুরু করুন</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loading-spinner">
+                <i class="fas fa-spinner"></i>
+                পরীক্ষা তৈরি হচ্ছে...
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBXXaWWoFqn6MpH6IWSm6CGaqUJzAmzbzA",
+        authDomain: "dopamine-quiz.firebaseapp.com",
+        projectId: "dopamine-quiz",
+        storageBucket: "dopamine-quiz.appspot.com",
+        messagingSenderId: "822531459966",
+        appId: "1:822531459966:web:8e7d2385090e997eb1c12f"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Exam presets
+    const examPresets = {
+        medical: {
+            name: "মেডিকেল ভর্তি পরীক্ষা",
+            totalQuestions: 100,
+            duration: 60,
+            marksPerQuestion: 1,
+            negativeMarking: 0.25,
+            subjects: {
+                "Botany": 15,
+                "Zoology": 15,
+                "Chemistry 1st": 12,
+                "Chemistry 2nd": 13,
+                "Physics 1st": 10,
+                "Physics 2nd": 10,
+                "English": 15,
+                "Bangla": 10
+            },
+            description: [
+                "১০০টি প্রশ্ন, ৬০ মিনিট সময়",
+                "প্রতি প্রশ্নে ১ নম্বর",
+                "ভুল উত্তরে ০.২৫ নম্বর কাটা",
+                "জীববিজ্ঞান ৩০, রসায়ন ২৫, পদার্থ ২০, ইংরেজি ১৫, বাংলা ১০"
+            ]
+        },
+        dental: {
+            name: "ডেন্টাল ভর্তি পরীক্ষা",
+            totalQuestions: 100,
+            duration: 60,
+            marksPerQuestion: 1,
+            negativeMarking: 0.25,
+            subjects: {
+                "Botany": 15,
+                "Zoology": 15,
+                "Chemistry 1st": 12,
+                "Chemistry 2nd": 13,
+                "Physics 1st": 10,
+                "Physics 2nd": 10,
+                "English": 15,
+                "Bangla": 10
+            },
+            description: [
+                "১০০টি প্রশ্ন, ৬০ মিনিট সময়",
+                "প্রতি প্রশ্নে ১ নম্বর", 
+                "ভুল উত্তরে ০.২৫ নম্বর কাটা",
+                "জীববিজ্ঞান ৩০, রসায়ন ২৫, পদার্থ ২০, ইংরেজি ১৫, বাংলা ১০"
+            ]
+        }
+    };
+
+    // ==================== PERFORMANCE FEATURES ====================
+    let performanceChartInstances = {};
+    let performanceData = {};
+
+    function showPerformanceModal() {
+        if (!isAuthenticated) {
+            Toastify({ text: "পারফরম্যান্স দেখতে লগইন করুন!", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            window.location.href = 'auth.html';
+            return;
+        }
+
+        const modal = document.getElementById('performanceModal');
+        if (!modal) {
+            console.error('Performance modal not found');
+            Toastify({ text: "পারফরম্যান্স মোডাল খুঁজে পাওয়া যায়নি", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            return;
+        }
+
+        modal.style.display = 'block';
+        loadPerformanceData();
+    }
+
+    function closePerformanceModal() {
+        document.getElementById('performanceModal').style.display = 'none';
+        Object.values(performanceChartInstances).forEach(chart => chart.destroy());
+        performanceChartInstances = {};
+    }
+
+    function openPerformanceTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`[onclick="openPerformanceTab('${tabId}')"]`).classList.add('active');
+        if (performanceData) renderPerformanceChart(tabId);
+    }
+
+    async function loadPerformanceData() {
+        const loading = Toastify({ text: "পারফরম্যান্স ডেটা লোড হচ্ছে...", duration: -1, style: { background: "#6b48ff" } });
+        loading.showToast();
+
+        // Check Chart.js availability with retry
+        let chartRetries = 3;
+        while (typeof Chart === 'undefined' && chartRetries > 0) {
+            console.log('Waiting for Chart.js to load...');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            chartRetries--;
+        }
+
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js not available, charts will be disabled');
+        }
+
+        try {
+            const userId = auth.currentUser.uid;
+            const attemptsSnapshot = await db.collection('attempts')
+                .where('userId', '==', userId)
+                .orderBy('timestamp', 'desc')
+                .limit(20)
+                .get();
+
+            performanceData = { 
+                attempts: [], 
+                subjects: {}, 
+                chapters: {}, 
+                timeline: [], 
+                overall: {
+                    totalExams: 0,
+                    totalQuestions: 0,
+                    correctAnswers: 0,
+                    incorrectAnswers: 0,
+                    skippedAnswers: 0,
+                    highestScore: 0,
+                    totalScore: 0
+                }
+            };
+
+            const examIds = [...new Set(attemptsSnapshot.docs.map(doc => doc.data().examId))];
+            const examsMap = {};
+
+            // Batch process exams (10 at a time)
+            for (let i = 0; i < examIds.length; i += 10) {
+                const batch = examIds.slice(i, i + 10);
+                const snapshot = await db.collection('exams')
+                    .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
+                    .get();
+                snapshot.forEach(doc => examsMap[doc.id] = doc.data());
+            }
+
+            attemptsSnapshot.forEach(doc => {
+                const attempt = doc.data();
+                const exam = examsMap[attempt.examId] || {};
+
+                // Timeline data
+                performanceData.timeline.push({
+                    date: attempt.timestamp.toDate(),
+                    score: attempt.score,
+                    total: attempt.totalQuestions * (exam.marksPerQuestion || 1),
+                    examTitle: exam.title || 'কাস্টম পরীক্ষা'
+                });
+
+                // Overall stats
+                performanceData.overall.totalExams++;
+                performanceData.overall.totalQuestions += attempt.totalQuestions;
+                performanceData.overall.correctAnswers += attempt.correctAnswers;
+                performanceData.overall.incorrectAnswers += attempt.incorrectAnswers;
+                performanceData.overall.skippedAnswers += attempt.skippedAnswers;
+                performanceData.overall.totalScore += attempt.score;
+
+                if (attempt.score > performanceData.overall.highestScore) {
+                    performanceData.overall.highestScore = attempt.score;
+                }
+
+                // Subject-wise data
+                if (exam.subjects?.length > 0) {
+                    exam.subjects.forEach(subject => {
+                        if (!performanceData.subjects[subject]) {
+                            performanceData.subjects[subject] = {
+                                totalQuestions: 0,
+                                correctAnswers: 0,
+                                incorrectAnswers: 0,
+                                skippedAnswers: 0,
+                                attempts: 0
+                            };
+                        }
+
+                        const questionsPerSubject = Math.floor(attempt.totalQuestions / exam.subjects.length);
+                        performanceData.subjects[subject].totalQuestions += questionsPerSubject;
+                        performanceData.subjects[subject].correctAnswers += Math.floor(attempt.correctAnswers / exam.subjects.length);
+                        performanceData.subjects[subject].incorrectAnswers += Math.floor(attempt.incorrectAnswers / exam.subjects.length);
+                        performanceData.subjects[subject].skippedAnswers += Math.floor(attempt.skippedAnswers / exam.subjects.length);
+                        performanceData.subjects[subject].attempts++;
+                    });
+                }
+
+                // Chapter-wise data
+                if (exam.chapters?.length > 0) {
+                    exam.chapters.forEach(chapter => {
+                        const chapterName = chapter.replace(/^Chapter \d+:\s*/, '');
+                        const subject = exam.subjects?.find(s => chapter.includes(s)) || 'Unknown';
+
+                        if (!performanceData.chapters[chapterName]) {
+                            performanceData.chapters[chapterName] = {
+                                subject: subject,
+                                totalQuestions: 0,
+                                correctAnswers: 0,
+                                incorrectAnswers: 0,
+                                skippedAnswers: 0,
+                                attempts: 0
+                            };
+                        }
+
+                        const questionsPerChapter = Math.floor(attempt.totalQuestions / exam.chapters.length);
+                        performanceData.chapters[chapterName].totalQuestions += questionsPerChapter;
+                        performanceData.chapters[chapterName].correctAnswers += Math.floor(attempt.correctAnswers / exam.chapters.length);
+                        performanceData.chapters[chapterName].incorrectAnswers += Math.floor(attempt.incorrectAnswers / exam.chapters.length);
+                        performanceData.chapters[chapterName].skippedAnswers += Math.floor(attempt.skippedAnswers / exam.chapters.length);
+                        performanceData.chapters[chapterName].attempts++;
+                    });
+                }
+            });
+
+            updateOverallStats();
+            populateSubjectDropdowns();
+            renderPerformanceChart('overall');
+
+        } catch (error) {
+            console.error("Error loading performance data:", error);
+
+            // Show offline fallback data
+            performanceData = {
+                attempts: [],
+                subjects: {},
+                chapters: {},
+                timeline: [],
+                overall: {
+                    totalExams: 0,
+                    totalQuestions: 0,
+                    correctAnswers: 0,
+                    incorrectAnswers: 0,
+                    skippedAnswers: 0,
+                    highestScore: 0,
+                    totalScore: 0
+                }
+            };
+
+            updateOverallStats();
+            populateSubjectDropdowns();
+
+            // Show offline message
+            const modalContent = document.querySelector('#performanceModal .modal-content');
+            if (modalContent) {
+                const offlineMessage = document.createElement('div');
+                offlineMessage.style.cssText = 'background: rgba(220, 53, 69, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center; color: var(--text-color);';
+                offlineMessage.innerHTML = `
+                    <i class="fas fa-wifi-slash" style="margin-right: 0.5rem;"></i>
+                    অফলাইন মোড: ইন্টারনেট সংযোগ পরীক্ষা করুন
+                `;
+                modalContent.insertBefore(offlineMessage, modalContent.children[1]);
+            }
+
+            Toastify({ 
+                text: "অফলাইন মোড: ইন্টারনেট সংযোগ পরীক্ষা করুন", 
+                duration: 5000, 
+                style: { background: "#ffc107" } 
+            }).showToast();
+        } finally {
+            loading.hideToast();
+        }
+    }
+
+    function updateOverallStats() {
+        const overall = performanceData.overall;
+        document.getElementById('totalExams').textContent = overall.totalExams;
+        document.getElementById('highestScore').textContent = overall.highestScore;
+
+        const averageScore = overall.totalExams > 0 
+            ? (overall.totalScore / overall.totalExams).toFixed(1) 
+            : 0;
+        document.getElementById('averageScore').textContent = averageScore;
+
+        const accuracyRate = overall.totalQuestions > 0 
+            ? ((overall.correctAnswers / overall.totalQuestions) * 100).toFixed(1) + '%' 
+            : '0%';
+        document.getElementById('accuracyRate').textContent = accuracyRate;
+
+        const completionRate = overall.totalQuestions > 0 
+            ? (((overall.correctAnswers + overall.incorrectAnswers) / overall.totalQuestions) * 100).toFixed(1) + '%' 
+            : '0%';
+        document.getElementById('completionRate').textContent = completionRate;
+    }
+
+    function populateSubjectDropdowns() {
+        const subjectSelect = document.getElementById('subjectSelect');
+        const chapterSubjectSelect = document.getElementById('chapterSubjectSelect');
+
+        subjectSelect.innerHTML = '<option value="">সব বিষয়</option>';
+        chapterSubjectSelect.innerHTML = '<option value="">সব বিষয়</option>';
+
+        Object.keys(performanceData.subjects).forEach(subject => {
+            const option = document.createElement('option');
+            option.value = subject;
+            option.textContent = subject;
+            subjectSelect.appendChild(option.cloneNode(true));
+            chapterSubjectSelect.appendChild(option);
+        });
+
+        updateSubjectStats();
+    }
+
+    function updateSubjectStats() {
+        const subjectSelect = document.getElementById('subjectSelect');
+        const selectedSubject = subjectSelect.value;
+        const subjectStatsDiv = document.getElementById('subjectStats');
+
+        if (!selectedSubject) {
+            const overall = performanceData.overall;
+            subjectStatsDiv.innerHTML = `
+                <h5>সব বিষয়ের সম্মিলিত পারফরম্যান্স</h5>
+                <div style="margin-bottom: 0.5rem;">
+                    <span>সঠিক উত্তর: ${overall.correctAnswers}/${overall.totalQuestions}</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                    <span>ভুল উত্তর: ${overall.incorrectAnswers}/${overall.totalQuestions}</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                    <span>এড়িয়ে যাওয়া: ${overall.skippedAnswers}/${overall.totalQuestions}</span>
+                </div>
+            `;
+        } else {
+            const subject = performanceData.subjects[selectedSubject];
+            subjectStatsDiv.innerHTML = `
+                <h5>${selectedSubject} পারফরম্যান্স</h5>
+                <p><strong>পরীক্ষা দেওয়া হয়েছে:</strong> ${subject.attempts}</p>
+                <div style="margin-bottom: 0.5rem;">
+                    <span>সঠিক উত্তর: ${subject.correctAnswers}/${subject.totalQuestions}</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                    <span>ভুল উত্তর: ${subject.incorrectAnswers}/${subject.totalQuestions}</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                    <span>এড়িয়ে যাওয়া: ${subject.skippedAnswers}/${subject.totalQuestions}</span>
+                </div>
+            `;
+        }
+        renderPerformanceChart('subject');
+    }
+
+    function updateChapterList() {
+        const subjectSelect = document.getElementById('chapterSubjectSelect');
+        const selectedSubject = subjectSelect.value;
+        const chapterStatsDiv = document.getElementById('chapterStats');
+
+        const filteredChapters = Object.entries(performanceData.chapters)
+            .filter(([_, data]) => !selectedSubject || data.subject === selectedSubject)
+            .sort((a, b) => b[1].attempts - a[1].attempts);
+
+        if (filteredChapters.length === 0) {
+            chapterStatsDiv.innerHTML = '<p>কোনো অধ্যায়ের ডেটা পাওয়া যায়নি</p>';
+            return;
+        }
+
+        let html = '<h5>অধ্যায়ভিত্তিক পারফরম্যান্স</h5><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">';
+
+        filteredChapters.forEach(([chapter, data]) => {
+            const accuracy = data.totalQuestions > 0 
+                ? (data.correctAnswers / data.totalQuestions * 100).toFixed(1) 
+                : 0;
+
+            html += `
+                <div style="background: var(--white); border-radius: 8px; padding: 1rem; box-shadow: var(--shadow);">
+                    <h6>${chapter}</h6>
+                    <small style="color: var(--text-secondary);">${data.subject}</small>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                        <span>সঠিকতা:</span>
+                        <span style="font-weight: bold;">${accuracy}%</span>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">
+                        সঠিক: ${data.correctAnswers} | ভুল: ${data.incorrectAnswers} | এড়ানো: ${data.skippedAnswers}
+                    </div>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+        chapterStatsDiv.innerHTML = html;
+        renderPerformanceChart('chapter');
+    }
+
+    function renderPerformanceChart(tabId) {
+        // Check if Chart is available
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            const chartContainer = document.getElementById(`${tabId}Chart`).parentElement;
+            chartContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>চার্ট লোড করা যায়নি। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।</p>
+                </div>
+            `;
+            return;
+        }
+
+        try {
+            if (performanceChartInstances[tabId]) {
+                performanceChartInstances[tabId].destroy();
+            }
+
+            const canvas = document.getElementById(`${tabId}Chart`);
+            if (!canvas) {
+                console.error(`Canvas element ${tabId}Chart not found`);
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            let chart;
+
+        switch (tabId) {
+            case 'overall':
+                const overall = performanceData.overall;
+                chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['সঠিক উত্তর', 'ভুল উত্তর', 'এড়িয়ে যাওয়া'],
+                        datasets: [{
+                            data: [overall.correctAnswers, overall.incorrectAnswers, overall.skippedAnswers],
+                            backgroundColor: ['#28a745', '#dc3545', '#6c757d'],
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const value = context.raw;
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${context.label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+
+            case 'subject':
+                const subjectSelect = document.getElementById('subjectSelect');
+                const selectedSubject = subjectSelect.value;
+
+                if (!selectedSubject) {
+                    const subjects = Object.keys(performanceData.subjects);
+                    const accuracyData = subjects.map(subject => {
+                        const s = performanceData.subjects[subject];
+                        return s.totalQuestions > 0 
+                            ? (s.correctAnswers / s.totalQuestions * 100) 
+                            : 0;
+                    });
+
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: subjects,
+                            datasets: [{
+                                label: 'সঠিক উত্তরের হার (%)',
+                                data: accuracyData,
+                                backgroundColor: subjects.map((_, i) => 
+                                    `hsl(${(i * 360 / subjects.length)}, 70%, 50%)`),
+                                borderColor: '#fff',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    title: { display: true, text: 'সঠিক উত্তরের হার (%)' }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const subject = performanceData.subjects[context.label];
+                                            return [
+                                                `সঠিক: ${subject.correctAnswers}/${subject.totalQuestions}`,
+                                                `ভুল: ${subject.incorrectAnswers}`,
+                                                `এড়ানো: ${subject.skippedAnswers}`
+                                            ];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const subject = performanceData.subjects[selectedSubject];
+                    chart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['সঠিক উত্তর', 'ভুল উত্তর', 'এড়িয়ে যাওয়া'],
+                            datasets: [{
+                                data: [subject.correctAnswers, subject.incorrectAnswers, subject.skippedAnswers],
+                                backgroundColor: ['#28a745', '#dc3545', '#6c757d'],
+                                borderColor: '#fff',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom' },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const value = context.raw;
+                                            const percentage = Math.round((value / total) * 100);
+                                            return `${context.label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                break;
+
+            case 'chapter':
+                const chapterSubjectSelect = document.getElementById('chapterSubjectSelect');
+                const selectedChapterSubject = chapterSubjectSelect.value;
+
+                const filteredChapters = Object.entries(performanceData.chapters)
+                    .filter(([_, data]) => !selectedChapterSubject || data.subject === selectedChapterSubject);
+
+                const chapterNames = filteredChapters.map(([name]) => name);
+                const chapterAccuracy = filteredChapters.map(([_, data]) => {
+                    return data.totalQuestions > 0 
+                        ? (data.correctAnswers / data.totalQuestions * 100)
+                        : 0;
+                });
+
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chapterNames,
+                        datasets: [{
+                            label: 'সঠিক উত্তরের হার (%)',
+                            data: chapterAccuracy,
+                            backgroundColor: chapterNames.map((_, i) => 
+                                `hsl(${(i * 360 / chapterNames.length)}, 70%, 50%)`),
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: { display: true, text: 'সঠিক উত্তরের হার (%)' }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const chapter = performanceData.chapters[context.label];
+                                        return [
+                                            `সঠিক: ${chapter.correctAnswers}/${chapter.totalQuestions}`,
+                                            `ভুল: ${chapter.incorrectAnswers}`,
+                                            `এড়ানো: ${chapter.skippedAnswers}`
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+
+            case 'timeline':
+                const dates = performanceData.timeline.map(item => 
+                    item.date.toLocaleDateString('bn-BD'));
+                const scores = performanceData.timeline.map(item => item.score);
+                const totals = performanceData.timeline.map(item => item.total);
+                const percentages = performanceData.timeline.map((item, i) => 
+                    Math.round((item.score / item.total) * 100));
+
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: 'স্কোর',
+                                data: scores,
+                                borderColor: '#6b48ff',
+                                backgroundColor: 'rgba(107, 72, 255, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'সর্বোচ্চ সম্ভাব্য',
+                                data: totals,
+                                borderColor: '#6c757d',
+                                backgroundColor: 'rgba(108, 117, 125, 0.1)',
+                                borderWidth: 1,
+                                borderDash: [5, 5],
+                                tension: 0.3,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'শতকরা হার (%)',
+                                data: percentages,
+                                borderColor: '#28a745',
+                                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                yAxisID: 'y1',
+                                hidden: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: { display: true, text: 'স্কোর' }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                min: 0,
+                                max: 100,
+                                title: { display: true, text: 'শতকরা হার (%)' },
+                                grid: { drawOnChartArea: false }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const index = context.dataIndex;
+                                        const item = performanceData.timeline[index];
+                                        return `পরীক্ষা: ${item.examTitle}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const timelineStatsDiv = document.getElementById('timelineStats');
+                if (performanceData.timeline.length > 1) {
+                    const firstScore = performanceData.timeline[0].score;
+                    const lastScore = performanceData.timeline[performanceData.timeline.length - 1].score;
+                    const improvement = lastScore - firstScore;
+                    const improvementPercentage = firstScore > 0 
+                        ? ((improvement / firstScore) * 100).toFixed(1)
+                        : '∞';
+
+                    timelineStatsDiv.innerHTML = `
+                        <h5>সময়রেখা বিশ্লেষণ</h5>
+                        <p>প্রথম পরীক্ষার স্কোর: ${firstScore}</p>
+                        <p>সর্বশেষ পরীক্ষার স্কোর: ${lastScore}</p>
+                        <p style="font-weight: bold;">উন্নতি: ${improvement} (${improvementPercentage}%)</p>
+                    `;
+                } else {
+                    timelineStatsDiv.innerHTML = '<p>সময়রেখা বিশ্লেষণের জন্য কমপক্ষে ২টি পরীক্ষা প্রয়োজন</p>';
+                }
+                break;
+        }
+
+        if (chart) {
+            performanceChartInstances[tabId] = chart;
+        }
+
+        } catch (error) {
+            console.error(`Error rendering ${tabId} chart:`, error);
+            const chartContainer = document.getElementById(`${tabId}Chart`).parentElement;
+            chartContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>চার্ট রেন্ডার করতে সমস্যা হয়েছে</p>
+                    <small>Error: ${error.message}</small>
+                </div>
+            `;
+        }
+    }
+
+    // ==================== EXISTING DASHBOARD FUNCTIONS ====================
+    const CACHE_KEY = 'userProfileData';
+    const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
+
+    let isDark = localStorage.getItem('theme') === 'dark';
+    let isAuthenticated = false;
+    let currentExamType = 'custom';
+    let chapterQuestionCounts = {};
+
+    // Theme setup
+    if (isDark) {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
+    }
+
+    function toggleTheme() {
+        isDark = !isDark;
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        document.getElementById('themeIcon').classList.toggle('fa-moon');
+        document.getElementById('themeIcon').classList.toggle('fa-sun');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    // Sidebar functionality - Same as index.html
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+
+        // Prevent body scroll when sidebar is open
+        if (sidebar.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+
+    function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function handleSidebarClick(url) {
+        closeSidebar();
+        if (!isAuthenticated && (url === 'profile.html' || url === 'courses.html' || url === 'question-bank.html' || url === 'studyplanner.html' || url === 'payment.html')) {
+            Toastify({ text: "এই ফিচারটি ব্যবহার করতে লগইন করুন!", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            window.location.href = 'auth.html';
+            return false;
+        }
+        if (url !== '#') {
+            window.location.href = url;
+        }
+        return true;
+    }
+
+    function requireLogin(url) {
+        if (!isAuthenticated) {
+            Toastify({ text: "এই ফিচারটি ব্যবহার করতে লগইন করুন!", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            window.location.href = 'auth.html';
+            return false;
+        }
+        window.location.href = url;
+        return true;
+    }
+
+    function getCachedUserData() {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+            try {
+                const cacheData = JSON.parse(cached);
+                if (Date.now() - cacheData.timestamp < CACHE_EXPIRATION) {
+                    return cacheData.data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY);
+                }
+            } catch (e) {
+                console.error('Error parsing cached user data:', e);
+                localStorage.removeItem(CACHE_KEY);
+            }
+        }
+        return null;
+    }
+
+    function setCachedUserData(userData) {
+        const cacheData = {
+            timestamp: Date.now(),
+            data: userData
+        };
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+        } catch (e) {
+            console.error('Error setting cache:', e);
+        }
+    }
+
+    // Auth state listener
+    auth.onAuthStateChanged(async user => {
+        const loginBtn = document.getElementById('login-btn');
+        const lastName = document.getElementById('lastName');
+        const guestSection = document.getElementById('guestSection');
+        const logoutSection = document.getElementById('logoutSection');
+
+        if (user) {
+            isAuthenticated = true;
+            loginBtn.style.display = 'none';
+            guestSection.style.display = 'none';
+            logoutSection.style.display = 'block';
+
+            let userData = getCachedUserData();
+            if (userData) {
+                populateUserData(userData);
+            } else {
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        userData = userDoc.data();
+                        userData.email = user.email;
+                        setCachedUserData(userData);
+                        populateUserData(userData);
+                    } else {
+                        lastName.textContent = 'ব্যবহারকারী';
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    lastName.textContent = 'ব্যবহারকারী';
+                }
+            }
+        } else {
+            isAuthenticated = false;
+            loginBtn.style.display = 'inline-block';
+            guestSection.style.display = 'block';
+            logoutSection.style.display = 'none';
+            lastName.textContent = 'ব্যবহারকারী';
+        }
+    });
+
+    function populateUserData(userData) {
+        const fullName = userData.fullName || 'ব্যবহারকারী';
+        const lastNameElement = document.getElementById('lastName');
+        if (lastNameElement) {
+            lastNameElement.textContent = fullName.split(' ').pop();
+        }
+    }
+
+    function logout() {
+        if (isAuthenticated) {
+            auth.signOut().then(() => {
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem('theme');
+                window.location.href = 'auth.html';
+            }).catch(error => {
+                Toastify({ text: "লগআউটে ত্রুটি: " + error.message, duration: 3000, style: { background: "#dc3545" } }).showToast();
+            });
+        }
+    }
+
+    function scrollToCustomExam() {
+        if (!isAuthenticated) {
+            Toastify({ text: "কাস্টম পরীক্ষা তৈরি করতে লগইন করুন!", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            window.location.href = 'auth.html';
+            return;
+        }
+        document.getElementById('custom-exam-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showSubjectExamModal() {
+        if (!isAuthenticated) {
+            Toastify({ text: "বিষয়ভিত্তিক পরীক্ষা দিতে লগইন করুন!", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            window.location.href = 'auth.html';
+            return;
+        }
+        
+        Toastify({ text: "বিষয়ভিত্তিক পরীক্ষা শীঘ্রই আসছে!", duration: 3000, style: { background: "#6b48ff" } }).showToast();
+    }
+
+    // Close sidebar when clicking outside or pressing escape
+    document.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = document.querySelector('.menu-btn');
+
+        if (sidebar.classList.contains('active') && 
+            !sidebar.contains(e.target) && 
+            !menuBtn.contains(e.target)) {
+            closeSidebar();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeSidebar();
+        }
+    });
+
+    // Custom Exam JavaScript
+    const subjects = {
+        "Botany": [
+            "Chapter 01: কোষ ও এর গঠন",
+            "Chapter 02: কোষ বিভাজন",
+            "Chapter 03: কোষ রসায়ন",
+            "Chapter 04: অণুজীব",
+            "Chapter 05: শৈবাল ও ছত্রাক",
+            "Chapter 06: ব্রায়োফাইটা ও টেরেডোফাইটা",
+            "Chapter 07: নগ্নবীজী ও আবৃতবীজী উদ্ভিদ",
+            "Chapter 08: টিস্যু ও টিস্যুতন্ত্র",
+            "Chapter 09: উদ্ভিদ শারীরতত্ত্ব",
+            "Chapter 10: উদ্ভিদ প্রজনন",
+            "Chapter 11: জীবপ্রযুক্তি"
+        ],
+        "Zoology": [
+            "Chapter 01: প্রাণীর বিভিন্নতা ও শ্রেণিবিন্যাস",
+            "Chapter 02: প্রাণীর পরিচিতি",
+            "Chapter 03: পরিপাক ও শোষণ",
+            "Chapter 04: রক্ত সঞ্চালন",
+            "Chapter 05: শ্বাসক্রিয়া ও শ্বসন",
+            "Chapter 06: বর্জ্য ও নিষ্কাশন",
+            "Chapter 07: চলন ও অঙ্গচালনা",
+            "Chapter 08: সমন্বয় ও নিয়ন্ত্রণ",
+            "Chapter 09: মানব জীবনের ধারাবাহিকতা",
+            "Chapter 10: মানবদেহের প্রতিরক্ষা",
+            "Chapter 11: জীনতত্ত্ব ও বিবর্তন"
+        ],
+        "Physics 1st": [
+            "Chapter 01: ভৌত জগৎ ও পরিমাপ",
+            "Chapter 02: ভেক্টর",
+            "Chapter 04: নিউটোনিয়ান বলবিদ্যা",
+            "Chapter 05: কাজ, শক্তি ও ক্ষমতা",
+            "Chapter 06: মহাকর্ষ ও অভিকর্ষ",
+            "Chapter 07: পদার্থের গাঠনিক ধর্ম",
+            "Chapter 08: পর্যাবৃত্ত গতি",
+            "Chapter 10: আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব"
+        ],
+        "Physics 2nd": [
+            "Chapter 01: তাপগতিবিদ্যা",
+            "Chapter 02: স্থির তড়িৎ",
+            "Chapter 03: চলতড়িৎ",
+            "Chapter 07: ভৌত আলোকবিজ্ঞান",
+            "Chapter 08: আধুনিক পদার্থবিজ্ঞানের সূচনা",
+            "Chapter 09: পরমাণুর মডেল এবং নিউক্লিয়ার পদার্থবিজ্ঞান",
+            "Chapter 10: সেমিকন্ডাক্টর ও ইলেকট্রনিক্স"
+        ],
+        "Chemistry 1st": [
+            "Chapter 01: ল্যাবরেটরির নিরাপদ ব্যবহার",
+            "Chapter 02: গুণগত রসায়ন",
+            "Chapter 03: মৌলের পর্যায়বৃত্ত ধর্ম",
+            "Chapter 04: রাসায়নিক পরিবর্তন",
+            "Chapter 05: কর্মমুখী রসায়ন"
+        ],
+        "Chemistry 2nd": [
+            "Chapter 01: পরিবেশ রসায়ন",
+            "Chapter 02: জৈব রসায়ন",
+            "Chapter 03: পরিমাণগত রসায়ন",
+            "Chapter 04: তড়িৎ রসায়ন",
+            "Chapter 05: অর্থনৈতিক রসায়ন"
+        ],
+        "Higher Math 1st": [
+            "Chapter 01: ম্যাট্রিক্স ও নির্ণায়ক",
+            "Chapter 03: সরলরেখা",
+            "Chapter 04: বৃত্ত",
+            "Chapter 07: সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত",
+            "Chapter 09: অন্তরীকরণ",
+            "Chapter 10: যোগজীকরণ"
+        ],
+        "Higher Math 2nd": [
+            "Chapter 03: জটিল সংখ্যা",
+            "Chapter 04: বহুপদী ও বহুপদী সমীকরণ",
+            "Chapter 06: কণিক",
+            "Chapter 07: বিপরীত ত্রিকোণমিতিক ফাংশন ও ত্রিকোণমিতিক সমীকরণ",
+            "Chapter 08: স্থিতিবিদ্যা",
+            "Chapter 09: সমতলে বস্তুকণার গতি"
+        ],
+        "English": [],
+        "Bangla": []
+    };
+
+    // Exam type selection
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.exam-type-card')) {
+            const card = e.target.closest('.exam-type-card');
+            const type = card.dataset.type;
+
+            // Remove selected class from all cards
+            document.querySelectorAll('.exam-type-card').forEach(c => c.classList.remove('selected'));
+
+            // Add selected class to clicked card
+            card.classList.add('selected');
+
+            // Update current exam type
+            currentExamType = type;
+
+            // Apply preset settings
+            applyPresetSettings(type);
+        }
+    });
+
+    function applyPresetSettings(type) {
+        const numQuestionsInput = document.getElementById('numQuestions');
+        const timeSelect = document.getElementById('timeSelect');
+        const marksInput = document.getElementById('marksPerQuestion');
+        const negativeInput = document.getElementById('negativeMarking');
+        const customTimeInput = document.getElementById('customTime');
+        const subjectSection = document.getElementById('subjectSelectionSection');
+
+        if (type === 'custom') {
+            // Enable all inputs for custom
+            numQuestionsInput.disabled = false;
+            timeSelect.disabled = false;
+            marksInput.disabled = false;
+            negativeInput.disabled = false;
+            subjectSection.style.display = 'block';
+
+            // Reset to default values
+            numQuestionsInput.value = 20;
+            timeSelect.value = '60';
+            marksInput.value = 1;
+            negativeInput.value = 0;
+            customTimeInput.style.display = 'none';
+        } else {
+            // Apply preset values and disable inputs
+            const preset = examPresets[type];
+            numQuestionsInput.value = preset.totalQuestions;
+            numQuestionsInput.disabled = true;
+
+            timeSelect.value = preset.duration.toString();
+            timeSelect.disabled = true;
+            customTimeInput.style.display = 'none';
+
+            marksInput.value = preset.marksPerQuestion;
+            marksInput.disabled = true;
+
+            negativeInput.value = preset.negativeMarking;
+            negativeInput.disabled = true;
+
+            subjectSection.style.display = 'none';
+        }
+
+        updateSummary();
+    }
+
+    // Event listeners for inputs
+    document.getElementById('timeSelect').addEventListener('change', function() {
+        const customTimeInput = document.getElementById('customTime');
+        if (this.value === 'custom') {
+            customTimeInput.style.display = 'block';
+        } else {
+            customTimeInput.style.display = 'none';
+        }
+        updateSummary();
+    });
+
+    document.getElementById('numQuestions').addEventListener('input', updateSummary);
+    document.getElementById('marksPerQuestion').addEventListener('input', updateSummary);
+    document.getElementById('customTime').addEventListener('input', updateSummary);
+    document.getElementById('negativeMarking').addEventListener('input', updateSummary);
+
+    function updateSummary() {
+        const numQuestions = parseInt(document.getElementById('numQuestions').value) || 0;
+        const timeSelect = document.getElementById('timeSelect');
+        const customTime = parseInt(document.getElementById('customTime').value) || 0;
+        const marksPerQuestion = parseFloat(document.getElementById('marksPerQuestion').value) || 0;
+        const negativeMarking = parseFloat(document.getElementById('negativeMarking').value) || 0;
+
+        document.getElementById('summaryQuestions').textContent = numQuestions;
+        document.getElementById('summaryMarks').textContent = marksPerQuestion;
+        document.getElementById('summaryNegative').textContent = negativeMarking;
+
+        let timeDisplay;
+        if (timeSelect.value === 'custom' && customTime > 0) {
+            timeDisplay = `${customTime} মিনিট`;
+        } else if (timeSelect.value !== 'custom') {
+            const selectedOption = timeSelect.options[timeSelect.selectedIndex];
+            timeDisplay = selectedOption.text;
+        } else {
+            timeDisplay = '০ মিনিট';
+        }
+        document.getElementById('summaryTime').textContent = timeDisplay;
+    }
+
+    // Subject and chapter selection functions
+    function sanitizeFileName(name) {
+        if (!name) return 'default';
+        // Remove "Chapter XX: " prefix and replace spaces with hyphens
+        return name.replace(/^Chapter \d+:\s*/, '').replace(/\s+/g, '-').replace(/[^a-zA-Z0-9\u0980-\u09FF-]/g, '');
+    }
+
+    async function loadQuestionsFromJSON(subject, chapter) {
+        if (!subject || !chapter) {
+            console.error("Missing subject or chapter:", subject, chapter);
+            return [];
+        }
+
+        try {
+            const sanitizedSubject = sanitizeFileName(subject);
+            const sanitizedChapter = sanitizeFileName(chapter);
+
+            const filePath = `./questions/subjects/${sanitizedSubject}/${sanitizedChapter}.json`;
+            console.log(`Attempting to load: ${filePath}`);
+
+            const response = await fetch(filePath);
+            if (!response.ok) {
+                console.warn(`File not found: ${filePath} (Status: ${response.status})`);
+                return [];
+            }
+
+            const data = await response.json();
+            return Array.isArray(data) ? data : [];
+        } catch (error) {
+            console.error(`Error loading ${subject} - ${chapter}:`, error);
+            return [];
+        }
+    }
+
+    async function fetchQuestionCounts() {
+        console.log('Fetching fresh question counts...');
+
+        const questionCounts = {};
+        chapterQuestionCounts = {};
+
+        for (const subject in subjects) {
+            if (!subjects[subject] || subjects[subject].length === 0) {
+                console.warn(`No chapters found for subject: ${subject}`);
+                continue;
+            }
+
+            questionCounts[subject] = 0;
+            chapterQuestionCounts[subject] = [];
+
+            for (const chapter of subjects[subject]) {
+                try {
+                    const questions = await loadQuestionsFromJSON(subject, chapter);
+                    const count = questions?.length || 0;
+
+                    questionCounts[subject] += count;
+                    chapterQuestionCounts[subject].push({ chapterName: chapter, questionCount: count });
+
+                    console.log(`Loaded ${count} questions for ${subject} - ${chapter}`);
+                } catch (error) {
+                    console.error(`Failed to load ${subject} - ${chapter}:`, error);
+                    // Still add the chapter even if questions couldn't be loaded
+                    chapterQuestionCounts[subject].push({ chapterName: chapter, questionCount: 0 });
+                }
+            }
+        }
+
+        return { questionCounts, chapterQuestionCounts };
+    }
+
+    async function populateSubjects() {
+        try {
+            const result = await fetchQuestionCounts();
+            const questionCounts = result?.questionCounts || {};
+            const subjectSelection = document.getElementById('subjectSelection');
+            subjectSelection.innerHTML = '';
+
+            for (const subject in subjects) {
+                const totalQuestions = questionCounts[subject] || 0;
+                const subjectChapterCounts = chapterQuestionCounts[subject] || [];
+
+                // If we don't have question counts, create chapters with 0 count
+                if (subjectChapterCounts.length === 0 && subjects[subject]) {
+                    subjects[subject].forEach(chapter => {
+                        subjectChapterCounts.push({ chapterName: chapter, questionCount: 0 });
+                    });
+                }
+
+                const subjectCard = createSubjectCard(subject, totalQuestions, subjectChapterCounts);
+                subjectSelection.appendChild(subjectCard);
+            }
+        } catch (error) {
+            console.error("Error populating subjects:", error);
+
+            // Fallback: Create subject cards with zero question counts
+            const subjectSelection = document.getElementById('subjectSelection');
+            subjectSelection.innerHTML = '';
+
+            for (const subject in subjects) {
+                const subjectChapterCounts = subjects[subject].map(chapter => ({
+                    chapterName: chapter,
+                    questionCount: 0
+                }));
+
+                const subjectCard = createSubjectCard(subject, 0, subjectChapterCounts);
+                subjectSelection.appendChild(subjectCard);
+            }
+
+            Toastify({ 
+                text: "অফলাইন মোড: প্রশ্ন সংখ্যা দেখানো যাচ্ছে না", 
+                duration: 3000, 
+                style: { background: "#ffc107" } 
+            }).showToast();
+        }
+    }
+
+    function createSubjectCard(subject, questionCount, chapterCounts) {
+        const subjectCard = document.createElement('div');
+        subjectCard.className = 'subject-card';
+
+        subjectCard.innerHTML = `
+            <div class="subject-header" onclick="toggleSubjectExpand(this)">
+                <div class="subject-header-left">
+                    <input type="checkbox" class="subject-checkbox" onchange="toggleSubjectSelection(this)" onclick="event.stopPropagation()">
+                    <span class="subject-name">${subject}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="subject-count">${questionCount} প্রশ্ন</span>
+                    <i class="fas fa-chevron-down subject-expand"></i>
+                </div>
+            </div>
+            <div class="chapters-list">
+                ${chapterCounts.map(chapter => `
+                    <div class="chapter-item" data-subject="${subject}" data-chapter="${chapter.chapterName}">
+                        <div class="chapter-left">
+                            <input type="checkbox" class="chapter-checkbox" onchange="toggleChapterSelection(this)" onclick="event.stopPropagation()">
+                            <span class="chapter-name">${chapter.chapterName.replace(/^Chapter \d+:\s*/, '')}</span>
+                        </div>
+                        <span class="chapter-count">${chapter.questionCount} প্রশ্ন</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        return subjectCard;
+    }
+
+    function toggleSubjectExpand(header) {
+        const subjectCard = header.closest('.subject-card');
+        const chaptersList = subjectCard.querySelector('.chapters-list');
+        const expandIcon = subjectCard.querySelector('.subject-expand');
+
+        chaptersList.classList.toggle('expanded');
+        expandIcon.classList.toggle('expanded');
+    }
+
+    function toggleSubjectSelection(checkbox) {
+        const subjectCard = checkbox.closest('.subject-card');
+        const chapterCheckboxes = subjectCard.querySelectorAll('.chapter-checkbox');
+
+        chapterCheckboxes.forEach(chapterCheckbox => {
+            chapterCheckbox.checked = checkbox.checked;
+        });
+    }
+
+    function toggleChapterSelection(checkbox) {
+        const subjectCard = checkbox.closest('.subject-card');
+        const subjectCheckbox = subjectCard.querySelector('.subject-checkbox');
+        const chapterCheckboxes = subjectCard.querySelectorAll('.chapter-checkbox');
+
+        const checkedChapters = Array.from(chapterCheckboxes).filter(cb => cb.checked);
+
+        if (checkedChapters.length === chapterCheckboxes.length) {
+            subjectCheckbox.checked = true;
+            subjectCheckbox.indeterminate = false;
+        } else if (checkedChapters.length > 0) {
+            subjectCheckbox.checked = false;
+            subjectCheckbox.indeterminate = true;
+        } else {
+            subjectCheckbox.checked = false;
+            subjectCheckbox.indeterminate = false;
+        }
+    }
+
+    // Form submission
+    document.getElementById("customExamForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!isAuthenticated) {
+            Toastify({ text: "কাস্টম পরীক্ষা তৈরি করতে লগইন করুন!", duration: 3000, style: { background: "#dc3545" } }).showToast();
+            window.location.href = 'auth.html';
+            return;
+        }
+
+        const submitButton = e.target.querySelector('.btn-primary');
+        submitButton.disabled = true;
+        submitButton.textContent = 'তৈরি হচ্ছে...';
+        const loadingDiv = document.getElementById("loading-spinner");
+        loadingDiv.style.display = "block";
+
+        try {
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+            const timeSelect = document.getElementById('timeSelect');
+            const customTime = parseInt(document.getElementById('customTime').value);
+            const marksPerQuestion = parseFloat(document.getElementById('marksPerQuestion').value);
+            const negativeMarking = parseFloat(document.getElementById('negativeMarking').value);
+
+            const time = timeSelect.value === "custom" ? customTime : parseInt(timeSelect.value);
+            if (isNaN(time) || time <= 0) {
+                throw new Error("অনুগ্রহ করে একটি বৈধ সময় নির্বাচন করুন।");
+            }
+
+            let examTitle;
+            let selectedChaptersWithCounts = [];
+
+            if (currentExamType === 'custom') {
+                examTitle = `কাস্টম পরীক্ষা - ${new Date().toLocaleDateString('bn-BD')}`;
+
+                const selectedCheckboxes = document.querySelectorAll('.chapter-checkbox:checked');
+                selectedCheckboxes.forEach(checkbox => {
+                    const chapterItem = checkbox.closest('.chapter-item');
+                    const subject = chapterItem.dataset.subject;
+                    const chapter = chapterItem.dataset.chapter;
+                    const questionCountElement = chapterItem.querySelector('.chapter-count');
+                    const questionCount = parseInt(questionCountElement.textContent) || 0;
+
+                    if (questionCount > 0) {
+                        selectedChaptersWithCounts.push({
+                            subject: subject,
+                            chapter: chapter,
+                            questionCount: questionCount
+                        });
+                    }
+                });
+
+                if (selectedChaptersWithCounts.length === 0) {
+                    throw new Error("অন্তত একটি চ্যাপ্টার নির্বাচন করুন!");
+                }
+            } else {
+                // Preset exam logic
+                const preset = examPresets[currentExamType];
+                examTitle = `${preset.name} - ${new Date().toLocaleDateString('bn-BD')}`;
+
+                for (const [subjectKey, requiredCount] of Object.entries(preset.subjects)) {
+                    if (!chapterQuestionCounts[subjectKey] || chapterQuestionCounts[subjectKey].length === 0) {
+                        console.warn(`No question data found for preset subject: ${subjectKey}`);
+                        continue;
+                    }
+
+                    let questionsCollected = 0;
+                    const subjectChapters = chapterQuestionCounts[subjectKey];
+                    const sortedChapters = [...subjectChapters].sort((a, b) => b.questionCount - a.questionCount);
+
+                    for (const chapterData of sortedChapters) {
+                        if (questionsCollected >= requiredCount) break;
+
+                        const questionsToTake = Math.min(chapterData.questionCount, requiredCount - questionsCollected);
+
+                        if (questionsToTake > 0) {
+                            selectedChaptersWithCounts.push({
+                                subject: subjectKey,
+                                chapter: chapterData.chapterName,
+                                questionCount: questionsToTake
+                            });
+                            questionsCollected += questionsToTake;
+                        }
+                    }
+
+                    if (questionsCollected < requiredCount) {
+                        console.warn(`Warning: Not enough questions collected for ${subjectKey}. Required: ${requiredCount}, Collected: ${questionsCollected}`);
+                    }
+                }
+
+                if (selectedChaptersWithCounts.length === 0) {
+                    throw new Error("প্রিসেট পরীক্ষার জন্য পর্যাপ্ত প্রশ্ন পাওয়া যায়নি!");
+                }
+            }
+
+            const allSelectedQuestions = [];
+
+            // Load questions from selected chapters
+            for (const { subject, chapter, questionCount } of selectedChaptersWithCounts) {
+                const questions = await loadQuestionsFromJSON(subject, chapter);
+                const shuffledChapterQuestions = questions.sort(() => 0.5 - Math.random());
+                allSelectedQuestions.push(...shuffledChapterQuestions.slice(0, questionCount));
+            }
+
+            const shuffledQuestions = allSelectedQuestions.sort(() => 0.5 - Math.random());
+
+            const examData = {
+                title: examTitle,
+                duration: time,
+                marksPerQuestion: marksPerQuestion,
+                negativeMark: isNaN(negativeMarking) ? 0 : negativeMarking,
+                questions: shuffledQuestions.slice(0, numQuestions).map((question, index) => ({
+                    id: index,
+                    subject: question.subject || 'Unknown',
+                    chapter: question.chapter || 'Unknown',
+                    questionData: question
+                })),
+                subjects: [...new Set(selectedChaptersWithCounts.map(item => item.subject))],
+                chapters: selectedChaptersWithCounts.map(item => item.chapter),
+                createdBy: auth.currentUser?.uid || 'anonymous',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                isQuestionBank: false,
+                examType: currentExamType
+            };
+
+            if (currentExamType !== 'custom') {
+                examData.subjectQuestionCounts = examPresets[currentExamType].subjects;
+            }
+
+            const examDocRef = await db.collection("exams").add(examData);
+
+            loadingDiv.style.display = "none";
+            submitButton.disabled = false;
+            submitButton.textContent = 'পরীক্ষা শুরু করুন';
+            Toastify({ text: "পরীক্ষা সফলভাবে তৈরি হয়েছে!", duration: 3000, style: { background: "#6b48ff" } }).showToast();
+            window.location.href = `quiz.html?examId=${examDocRef.id}`;
+        } catch (error) {
+            const loadingDiv = document.getElementById("loading-spinner");
+            loadingDiv.style.display = "none";
+            submitButton.disabled = false;
+            submitButton.textContent = 'পরীক্ষা শুরু করুন';
+            console.error("কাস্টম পরীক্ষা তৈরিতে ত্রুটি:", error);
+            Toastify({ text: error.message, duration: 3000, style: { background: "#dc3545" } }).showToast();
+        }
+    });
+
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+            }
+        });
+    }, observerOptions);
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set default exam type
+        document.querySelector('.exam-type-card[data-type="custom"]').classList.add('selected');
+        applyPresetSettings('custom');
+        populateSubjects();
+        updateSummary();
+
+        // Observe all elements with animation classes
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.style.padding = '0.5rem 0';
+                navbar.style.boxShadow = 'var(--shadow)';
+            } else {
+                navbar.style.padding = '1rem 0';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

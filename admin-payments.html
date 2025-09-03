@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডোপামিন - পেমেন্ট ম্যানেজমেন্ট</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1.25rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .refresh-btn {
+            padding: 0.5rem 1rem;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .refresh-btn:hover {
+            background: #5858e0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #6366f1;
+        }
+
+        .stat-label {
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        .payments-table {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #6366f1;
+            color: white;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-content {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .payment-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 150px;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: center;
+        }
+
+        .payment-row:hover {
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: white;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #f8fafc;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .payment-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>কোর্স ক্রয় ম্যানেজমেন্ট</h1>
+        <a href="dashboard.html">ড্যাশবোর্ড</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">কোর্স ক্রয় অনুরোধ ম্যানেজমেন্ট</h1>
+
+        <div class="controls">
+            <div class="filter-controls">
+                <select id="statusFilter" class="filter-select" onchange="resetAndLoadPayments()">
+                    <option value="all">সব স্ট্যাটাস</option>
+                    <option value="pending">অপেক্ষমাণ</option>
+                    <option value="approved">অনুমোদিত</option>
+                    <option value="rejected">প্রত্যাখ্যাত</option>
+                </select>
+                
+                <select id="pageSize" class="filter-select" onchange="resetAndLoadPayments()">
+                    <option value="10">১০টি</option>
+                    <option value="20" selected>২০টি</option>
+                    <option value="50">৫০টি</option>
+                </select>
+            </div>
+            
+            <button class="refresh-btn" onclick="resetAndLoadPayments()">
+                <i class="fas fa-refresh"></i> রিফ্রেশ করুন
+            </button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalPending">0</div>
+                <div class="stat-label">অপেক্ষমাণ কোর্স</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalApproved">0</div>
+                <div class="stat-label">এনরোল হওয়া কোর্স</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRejected">0</div>
+                <div class="stat-label">প্রত্যাখ্যাত</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalAmount">৳ 0</div>
+                <div class="stat-label">মোট বিক্রয়</div>
+            </div>
+        </div>
+
+        <div class="payments-table">
+            <div class="table-header">
+                <span>কোর্স ক্রয় অনুরোধসমূহ</span>
+                <span id="resultsCount" class="pagination-info"></span>
+            </div>
+            <div class="table-content" id="paymentsContainer">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...
+                </div>
+            </div>
+            <div class="pagination">
+                <button class="pagination-btn" id="prevBtn" onclick="loadPreviousPage()" disabled>
+                    <i class="fas fa-chevron-left"></i> পূর্ববর্তী
+                </button>
+                <span class="pagination-info" id="pageInfo">পৃষ্ঠা ১</span>
+                <button class="pagination-btn" id="nextBtn" onclick="loadNextPage()">
+                    পরবর্তী <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXXaWWoFqn6MpH6IWSm6CGaqUJzAmzbzA",
+            authDomain: "dopamine-quiz.firebaseapp.com",
+            projectId: "dopamine-quiz",
+            storageBucket: "dopamine-quiz.appspot.com",
+            messagingSenderId: "822531459966",
+            appId: "1:822531459966:web:8e7d2385090e997eb1c12f"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Pagination variables
+        let currentPage = 1;
+        let pageSize = 20;
+        let lastDoc = null;
+        let firstDoc = null;
+        let hasMoreData = true;
+        let previousPageDocs = []; // Store first docs of previous pages
+        let currentPayments = [];
+        let stats = { pending: 0, approved: 0, rejected: 0, totalAmount: 0 };
+
+        // Load payment requests with pagination
+        async function loadPaymentRequests(direction = 'next') {
+            try {
+                const statusFilter = document.getElementById('statusFilter').value;
+                pageSize = parseInt(document.getElementById('pageSize').value);
+                
+                document.getElementById('paymentsContainer').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...</div>';
+
+                let query = db.collection('paymentRequests')
+                    .orderBy('timestamp', 'desc')
+                    .limit(pageSize);
+
+                // Apply status filter
+                if (statusFilter !== 'all') {
+                    query = query.where('status', '==', statusFilter);
+                }
+
+                // Handle pagination
+                if (direction === 'next' && lastDoc) {
+                    query = query.startAfter(lastDoc);
+                } else if (direction === 'prev' && previousPageDocs.length > 0) {
+                    const prevDoc = previousPageDocs.pop();
+                    if (prevDoc) {
+                        query = query.startAt(prevDoc);
+                    }
+                }
+
+                const snapshot = await query.get();
+                
+                if (snapshot.empty) {
+                    if (direction === 'next') {
+                        hasMoreData = false;
+                    }
+                    if (currentPage === 1) {
+                        document.getElementById('paymentsContainer').innerHTML = '<div style="text-align: center; padding: 2rem; color: #64748b;">কোনো পেমেন্ট রিকোয়েস্ট পাওয়া যায়নি</div>';
+                    }
+                    updatePaginationButtons();
+                    return;
+                }
+
+                // Store pagination cursors
+                if (direction === 'next') {
+                    if (firstDoc) {
+                        previousPageDocs.push(firstDoc);
+                    }
+                    firstDoc = snapshot.docs[0];
+                    lastDoc = snapshot.docs[snapshot.docs.length - 1];
+                    hasMoreData = snapshot.docs.length === pageSize;
+                } else if (direction === 'prev') {
+                    firstDoc = snapshot.docs[0];
+                    lastDoc = snapshot.docs[snapshot.docs.length - 1];
+                    hasMoreData = true; // If we can go back, we can go forward
+                }
+
+                currentPayments = [];
+                snapshot.forEach(doc => {
+                    currentPayments.push({ id: doc.id, ...doc.data() });
+                });
+
+                renderPayments();
+                updatePaginationButtons();
+                updateResultsCount();
+
+            } catch (error) {
+                console.error('Error loading payment requests:', error);
+                document.getElementById('paymentsContainer').innerHTML = '<div style="text-align: center; padding: 2rem; color: #ef4444;">লোড করতে সমস্যা হয়েছে</div>';
+            }
+        }
+
+        // Load stats separately (only once or on manual refresh)
+        async function loadStats() {
+            try {
+                // Load counts for each status
+                const pendingSnapshot = await db.collection('paymentRequests').where('status', '==', 'pending').get();
+                const approvedSnapshot = await db.collection('paymentRequests').where('status', '==', 'approved').get();
+                const rejectedSnapshot = await db.collection('paymentRequests').where('status', '==', 'rejected').get();
+
+                stats.pending = pendingSnapshot.size;
+                stats.approved = approvedSnapshot.size;
+                stats.rejected = rejectedSnapshot.size;
+
+                // Calculate total amount from approved payments
+                stats.totalAmount = 0;
+                approvedSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.amount) {
+                        stats.totalAmount += data.amount;
+                    }
+                });
+
+                updateStatsDisplay();
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('totalPending').textContent = stats.pending;
+            document.getElementById('totalApproved').textContent = stats.approved;
+            document.getElementById('totalRejected').textContent = stats.rejected;
+            document.getElementById('totalAmount').textContent = `৳ ${stats.totalAmount}`;
+        }
+
+        function renderPayments() {
+            const container = document.getElementById('paymentsContainer');
+            container.innerHTML = '';
+
+            if (currentPayments.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #64748b;">এই পৃষ্ঠায় কোনো ডেটা নেই</div>';
+                return;
+            }
+
+            currentPayments.forEach(payment => {
+                const row = document.createElement('div');
+                row.className = 'payment-row';
+                
+                const date = payment.timestamp ? payment.timestamp.toDate().toLocaleDateString('bn-BD') : 'N/A';
+                
+                const paymentInfo = `<strong>Course ID:</strong> ${payment.courseId || 'N/A'}<br><strong>TrxID:</strong> ${payment.transactionId}<br><strong>From:</strong> ${payment.senderNumber}`;
+                
+                row.innerHTML = `
+                    <div>
+                        <strong>${payment.userEmail}</strong><br>
+                        <small>${payment.requestId}</small><br>
+                        <span style="background: #e0f2fe; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem;">
+                            কোর্স ক্রয়
+                        </span>
+                    </div>
+                    <div>৳ ${payment.amount}</div>
+                    <div>
+                        ${paymentInfo}
+                    </div>
+                    <div>${date}</div>
+                    <div>
+                        <span class="status-badge status-${payment.status}">
+                            ${getStatusText(payment.status)}
+                        </span>
+                    </div>
+                    <div class="action-buttons">
+                        ${payment.status === 'pending' ? `
+                            <button class="btn btn-approve" onclick="approvePayment('${payment.id}', ${payment.amount}, '${payment.userId}', '${payment.type}', '${payment.courseId}')">
+                                এনরোল করুন
+                            </button>
+                            <button class="btn btn-reject" onclick="rejectPayment('${payment.id}')">
+                                প্রত্যাখ্যান
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(row);
+            });
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'অপেক্ষমাণ';
+                case 'approved': return 'অনুমোদিত';
+                case 'rejected': return 'প্রত্যাখ্যাত';
+                default: return status;
+            }
+        }
+
+        function updatePaginationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageInfo = document.getElementById('pageInfo');
+
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = !hasMoreData;
+            pageInfo.textContent = `পৃষ্ঠা ${currentPage}`;
+        }
+
+        function updateResultsCount() {
+            const count = currentPayments.length;
+            document.getElementById('resultsCount').textContent = `${count}টি ফলাফল`;
+        }
+
+        async function loadNextPage() {
+            if (!hasMoreData) return;
+            currentPage++;
+            await loadPaymentRequests('next');
+        }
+
+        async function loadPreviousPage() {
+            if (currentPage === 1) return;
+            currentPage--;
+            await loadPaymentRequests('prev');
+        }
+
+        async function resetAndLoadPayments() {
+            currentPage = 1;
+            lastDoc = null;
+            firstDoc = null;
+            hasMoreData = true;
+            previousPageDocs = [];
+            await loadPaymentRequests('next');
+            await loadStats(); // Reload stats when manually refreshing
+        }
+
+        async function approvePayment(paymentId, amount, userId, type, courseId) {
+            if (!confirm('এই কোর্স ক্রয় অনুমোদন করতে চান?')) return;
+
+            try {
+                // Update payment status
+                await db.collection('paymentRequests').doc(paymentId).update({
+                    status: 'approved',
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                const userRef = db.collection('users').doc(userId);
+                
+                // Add course to user's enrollments
+                await db.runTransaction(async (transaction) => {
+                    const userDoc = await transaction.get(userRef);
+                    const userData = userDoc.exists ? userDoc.data() : {};
+                    const currentEnrollments = userData.enrollments || [];
+                    
+                    if (!currentEnrollments.includes(courseId)) {
+                        const newEnrollments = [...currentEnrollments, courseId];
+                        transaction.set(userRef, {
+                            ...userData,
+                            enrollments: newEnrollments,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                    }
+                });
+
+                Toastify({
+                    text: "কোর্স ক্রয় অনুমোদন করা হয়েছে! ব্যবহারকারী এখন কোর্সে এনরোল হয়েছে।",
+                    duration: 3000,
+                    style: { background: "#10b981" }
+                }).showToast();
+
+                // Update local data and stats
+                const paymentIndex = currentPayments.findIndex(p => p.id === paymentId);
+                if (paymentIndex !== -1) {
+                    currentPayments[paymentIndex].status = 'approved';
+                    stats.pending = Math.max(0, stats.pending - 1);
+                    stats.approved += 1;
+                    stats.totalAmount += amount;
+                    renderPayments();
+                    updateStatsDisplay();
+                }
+
+            } catch (error) {
+                console.error('Error approving payment:', error);
+                Toastify({
+                    text: "কোর্স এনরোলমেন্টে সমস্যা হয়েছে",
+                    duration: 3000,
+                    style: { background: "#ef4444" }
+                }).showToast();
+            }
+        }
+
+        async function rejectPayment(paymentId) {
+            if (!confirm('এই পেমেন্ট প্রত্যাখ্যান করতে চান?')) return;
+
+            try {
+                await db.collection('paymentRequests').doc(paymentId).update({
+                    status: 'rejected',
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                Toastify({
+                    text: "পেমেন্ট প্রত্যাখ্যান করা হয়েছে",
+                    duration: 3000,
+                    style: { background: "#ef4444" }
+                }).showToast();
+
+                // Update local data and stats
+                const paymentIndex = currentPayments.findIndex(p => p.id === paymentId);
+                if (paymentIndex !== -1) {
+                    currentPayments[paymentIndex].status = 'rejected';
+                    stats.pending = Math.max(0, stats.pending - 1);
+                    stats.rejected += 1;
+                    renderPayments();
+                    updateStatsDisplay();
+                }
+
+            } catch (error) {
+                console.error('Error rejecting payment:', error);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadStats();
+            await loadPaymentRequests('next');
+        });
+    </script>
+</body>
+</html>

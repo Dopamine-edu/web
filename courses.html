@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডোপামিন - কোর্স</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --border-color: #e2e8f0;
+            --primary-color: #6366f1;
+            --hover-color: #4f46e5;
+            --secondary-text-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --free-color: #10b981;
+            --paid-color: #f59e0b;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f1f5f9;
+            --card-bg: #1e293b;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --border-color: #334155;
+            --secondary-text-color: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            padding: 1.25rem 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-left img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .website-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .back-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1.4rem;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .course-price {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .price-free {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--free-color);
+        }
+
+        .price-paid {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--paid-color);
+        }
+
+        .course-description {
+            color: var(--secondary-text-color);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary-text-color);
+        }
+
+        .course-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .enrolled-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-text {
+            color: var(--secondary-text-color);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .course-actions {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="logo.png" alt="ডোপামিন Logo" onerror="this.src='https://via.placeholder.com/50';">
+            <h1 class="website-name">ডোপামিন</h1>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                ড্যাশবোর্ড
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="page-title">কোর্স সমূহ</h1>
+            <p class="page-subtitle">আপনার পছন্দের কোর্সে ভর্তি হন এবং নিয়মিত পরীক্ষায় অংশ নিন</p>
+        </div>
+
+        
+
+        <div class="courses-grid" id="coursesGrid">
+            <!-- Courses will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Enrollment Modal -->
+    <div class="modal" id="enrollmentModal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalTitle">কোর্সে ভর্তি</h3>
+            <p class="modal-text" id="modalText"></p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="confirmEnrollBtn">ভর্তি হন</button>
+                <button class="btn btn-secondary" onclick="closeModal()">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXXaWWoFqn6MpH6IWSm6CGaqUJzAmzbzA",
+            authDomain: "dopamine-quiz.firebaseapp.com",
+            projectId: "dopamine-quiz",
+            storageBucket: "dopamine-quiz.appspot.com",
+            messagingSenderId: "822531459966",
+            appId: "1:822531459966:web:8e7d2385090e997eb1c12f"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let userEnrollments = [];
+        let selectedCourse = null;
+
+        // Sample courses data - in production, this would come from Firestore
+        const courses = [
+            {
+                id: 'medical-course',
+                title: 'মেডিকেল ভর্তি প্রস্তুতি',
+                description: 'মেডিকেল কলেজে ভর্তির জন্য সম্পূর্ণ প্রস্তুতি কোর্স। জীববিজ্ঞান, রসায়ন, পদার্থবিজ্ঞান এবং ইংরেজিতে দৈনিক পরীক্ষা।',
+                price: 500,
+                isFree: false,
+                duration: '৬ মাস',
+                examsCount: 180,
+                icon: '🩺',
+                dailyExamTime: '20:00',
+                subjects: ['জীববিজ্ঞান', 'রসায়ন', 'পদার্থবিজ্ঞান', 'ইংরেজি']
+            },
+            {
+                id: 'dental-course',
+                title: 'ডেন্টাল ভর্তি প্রস্তুতি',
+                description: 'ডেন্টাল কলেজে ভর্তির জন্য বিশেষায়িত কোর্স। প্রতিদিন মডেল টেস্ট এবং বিস্তারিত সমাধান।',
+                price: 400,
+                isFree: false,
+                duration: '৪ মাস',
+                examsCount: 120,
+                icon: '🦷',
+                dailyExamTime: '21:00',
+                subjects: ['জীববিজ্ঞান', 'রসায়ন', 'পদার্থবিজ্ঞান', 'ইংরেজি']
+            },
+            {
+                id: 'basic-science',
+                title: 'বেসিক সাইন্স',
+                description: 'মৌলিক বিজ্ঞানের ভিত্তি শক্ত করার জন্য বিনামূল্যে কোর্স। প্রতিদিন প্রাথমিক পর্যায়ের প্রশ্ন অনুশীলন।',
+                price: 0,
+                isFree: true,
+                duration: '৩ মাস',
+                examsCount: 90,
+                icon: '🔬',
+                dailyExamTime: '19:00',
+                subjects: ['পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান']
+            },
+            {
+                id: 'engineering-prep',
+                title: 'ইঞ্জিনিয়ারিং ভর্তি',
+                description: 'ইঞ্জিনিয়ারিং বিশ্ববিদ্যালয়ে ভর্তির জন্য গণিত ও বিজ্ঞানে দক্ষতা বৃদ্ধির কোর্স।',
+                price: 600,
+                isFree: false,
+                duration: '৮ মাস',
+                examsCount: 240,
+                icon: '⚙️',
+                dailyExamTime: '20:30',
+                subjects: ['উচ্চতর গণিত', 'পদার্থবিজ্ঞান', 'রসায়ন']
+            },
+            {
+                id: 'general-knowledge',
+                title: 'সাধারণ জ্ঞান',
+                description: 'বিভিন্ন চাকরির পরীক্ষা ও ভর্তি পরীক্ষার জন্য সাধারণ জ্ঞানের বিনামূল্যে কোর্স।',
+                price: 0,
+                isFree: true,
+                duration: '২ মাস',
+                examsCount: 60,
+                icon: '📚',
+                dailyExamTime: '18:00',
+                subjects: ['বাংলাদেশ বিষয়াবলি', 'আন্তর্জাতিক বিষয়াবলি', 'বিজ্ঞান ও প্রযুক্তি']
+            },
+            {
+                id: 'language-skills',
+                title: 'ভাষা দক্ষতা',
+                description: 'বাংলা ও ইংরেজি ভাষায় দক্ষতা বৃদ্ধির জন্য প্রিমিয়াম কোর্স। ব্যাকরণ ও সাহিত্যে পারদর্শিতা।',
+                price: 300,
+                isFree: false,
+                duration: '৫ মাস',
+                examsCount: 150,
+                icon: '📝',
+                dailyExamTime: '19:30',
+                subjects: ['বাংলা', 'ইংরেজি']
+            }
+        ];
+
+        // Theme management
+        let isDark = localStorage.getItem('theme') === 'dark';
+        if (isDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
+        }
+
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeIcon').classList.toggle('fa-moon');
+            document.getElementById('themeIcon').classList.toggle('fa-sun');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Auth state observer
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUserData();
+                renderCourses();
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+
+        async function loadUserData() {
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    userEnrollments = userData.enrollments || [];
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                Toastify({
+                    text: "ব্যবহারকারীর তথ্য লোড করতে ত্রুটি",
+                    duration: 3000,
+                    style: { background: "#ef4444" }
+                }).showToast();
+            }
+        }
+
+        function renderCourses() {
+            const coursesGrid = document.getElementById('coursesGrid');
+            if (!coursesGrid) {
+                console.error('Courses grid element not found');
+                return;
+            }
+
+            coursesGrid.innerHTML = '';
+
+            if (!Array.isArray(courses)) {
+                console.error('Courses is not an array');
+                return;
+            }
+
+            courses.forEach(course => {
+                if (!course || !course.id) {
+                    console.error('Invalid course object:', course);
+                    return;
+                }
+
+                const isEnrolled = Array.isArray(userEnrollments) && userEnrollments.includes(course.id);
+
+                const courseCard = document.createElement('div');
+                courseCard.className = 'course-card';
+                courseCard.innerHTML = `
+                    <div class="course-image">
+                        <span>${course.icon}</span>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-header">
+                            <div>
+                                <h3 class="course-title">${course.title}</h3>
+                                ${isEnrolled ? '<span class="enrolled-badge"><i class="fas fa-check"></i> ভর্তি হয়েছেন</span>' : ''}
+                            </div>
+                            <span class="course-price ${course.isFree ? 'price-free' : 'price-paid'}">
+                                ${course.isFree ? 'বিনামূল্যে' : `৳ ${course.price}`}
+                            </span>
+                        </div>
+                        <p class="course-description">${course.description}</p>
+                        <div class="course-stats">
+                            <span class="course-stat">
+                                <i class="fas fa-clock"></i>
+                                ${course.duration}
+                            </span>
+                            <span class="course-stat">
+                                <i class="fas fa-clipboard-list"></i>
+                                ${course.examsCount} পরীক্ষা
+                            </span>
+                            <span class="course-stat">
+                                <i class="fas fa-graduation-cap"></i>
+                                ${course.subjects.length} বিষয়
+                            </span>
+                        </div>
+                        <div class="course-actions">
+                            ${isEnrolled 
+                                ? `<button class="btn btn-success" onclick="startDailyExam('${course.id}')">
+                                    <i class="fas fa-play"></i> আজকের পরীক্ষা
+                                   </button>`
+                                : `<button class="btn btn-primary" onclick="enrollCourse('${course.id}')">
+                                    <i class="fas fa-user-plus"></i> 
+                                    ${course.isFree ? 'ভর্তি হন' : 'ভর্তি হন'}
+                                   </button>`
+                            }
+                            <button class="btn btn-secondary" onclick="viewCourseDetails('${course.id}')">
+                                <i class="fas fa-info-circle"></i> বিস্তারিত
+                            </button>
+                        </div>
+                    </div>
+                `;
+                coursesGrid.appendChild(courseCard);
+            });
+        }
+
+        function enrollCourse(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            selectedCourse = course;
+
+            if (course.isFree) {
+                // For free courses, directly enroll
+                confirmEnrollment();
+            } else {
+                // For paid courses, redirect to payment page with course info
+                const courseInfo = encodeURIComponent(JSON.stringify({
+                    id: course.id,
+                    title: course.title,
+                    price: course.price,
+                    type: 'course'
+                }));
+                window.location.href = `payment.html?course=${courseInfo}`;
+            }
+        }
+
+        async function confirmEnrollment() {
+            if (!selectedCourse || !selectedCourse.isFree) return;
+
+            try {
+                const userRef = db.collection('users').doc(currentUser.uid);
+
+                await db.runTransaction(async (transaction) => {
+                    const userDoc = await transaction.get(userRef);
+                    const userData = userDoc.data() || {};
+                    const currentEnrollments = userData.enrollments || [];
+
+                    if (currentEnrollments.includes(selectedCourse.id)) {
+                        throw new Error('আপনি ইতিমধ্যে এই কোর্সে ভর্তি হয়েছেন');
+                    }
+
+                    const newEnrollments = [...currentEnrollments, selectedCourse.id];
+
+                    transaction.set(userRef, {
+                        ...userData,
+                        enrollments: newEnrollments,
+                        email: currentUser.email,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                });
+
+                // Update local data
+                userEnrollments.push(selectedCourse.id);
+
+                Toastify({
+                    text: `${selectedCourse.title} কোর্সে সফলভাবে ভর্তি হয়েছেন!`,
+                    duration: 3000,
+                    style: { background: "#10b981" }
+                }).showToast();
+
+                renderCourses();
+
+            } catch (error) {
+                console.error('Error enrolling in course:', error);
+                Toastify({
+                    text: error.message || "ভর্তি হতে ত্রুটি হয়েছে",
+                    duration: 3000,
+                    style: { background: "#ef4444" }
+                }).showToast();
+            }
+        }
+
+        function startDailyExam(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            // In a real implementation, you would check if today's exam is available
+            // and redirect to the quiz page with course-specific questions
+            Toastify({
+                text: `${course.title} এর আজকের পরীক্ষা শীঘ্রই আসছে!`,
+                duration: 3000,
+                style: { background: "#6366f1" }
+            }).showToast();
+
+            // Example: Redirect to quiz with course context
+            // window.location.href = `quiz.html?courseId=${courseId}&type=daily`;
+        }
+
+        function viewCourseDetails(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            selectedCourse = course;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalText = document.getElementById('modalText');
+            const confirmBtn = document.getElementById('confirmEnrollBtn');
+
+            if (!modalTitle || !modalText || !confirmBtn) {
+                console.error('Modal title, text, or confirm button element not found');
+                return;
+            }
+
+            modalTitle.textContent = `${course.title} - বিস্তারিত`;
+            modalText.innerHTML = `
+                <div style="text-align: left;">
+                    <h4>কোর্সের বিবরণ:</h4>
+                    <p>${course.description}</p>
+
+                    <h4>বিষয়সমূহ:</h4>
+                    <ul>
+                        ${course.subjects.map(subject => `<li>${subject}</li>`).join('')}
+                    </ul>
+
+                    <h4>সময়সূচী:</h4>
+                    <p>দৈনিক পরীক্ষা: ${course.dailyExamTime}</p>
+                    <p>কোর্সের মেয়াদ: ${course.duration}</p>
+                    <p>মোট পরীক্ষা: ${course.examsCount}টি</p>
+
+                    <h4>মূল্য:</h4>
+                    <p>${course.isFree ? 'সম্পূর্ণ বিনামূল্যে' : `৳ ${course.price}`}</p>
+                </div>
+            `;
+
+            confirmBtn.textContent = 'বুঝেছি';
+            confirmBtn.onclick = closeModal;
+            confirmBtn.classList.remove('loading'); // Ensure button is reset if it was in loading state
+            confirmBtn.disabled = false;
+
+            document.getElementById('enrollmentModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            const enrollmentModal = document.getElementById('enrollmentModal');
+            if (enrollmentModal) {
+                enrollmentModal.style.display = 'none';
+            }
+            selectedCourse = null;
+
+            // Reset confirm button
+            const confirmBtn = document.getElementById('confirmEnrollBtn');
+            if (confirmBtn) {
+                confirmBtn.textContent = 'ভর্তি হন';
+                confirmBtn.onclick = confirmEnrollment;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const confirmBtn = document.getElementById('confirmEnrollBtn');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', confirmEnrollment);
+            }
+
+            // Close modal when clicking outside
+            const enrollmentModal = document.getElementById('enrollmentModal');
+            if (enrollmentModal) {
+                enrollmentModal.addEventListener('click', (e) => {
+                    if (e.target.id === 'enrollmentModal') {
+                        closeModal();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
